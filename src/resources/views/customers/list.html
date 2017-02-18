@@ -1,0 +1,48 @@
+<template>
+  <require from="styles/customer-list.css"></require>
+
+  <div class="ui segment" id="customer-list">
+    <div class="ui grid">
+      <h2 class="ui header six wide column">
+        <i class="circular building outline icon"></i>
+        <div class="content">
+          Customer List
+        </div>
+      </h2>
+      <div class="ten wide column">
+        <div class="ui fluid icon input">
+          <input type="search" name="search" placeholder="Search..." value.bind="search & debounce" autofocus>
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="ui special cards">
+      <div class="ui card" href="#/${c._id}" repeat.for="c of customers">
+        <div class="content">
+          <div class="header">${c.name}</div>
+          <div class="description">
+            <p><strong>Address:</strong>&nbsp;${c.address}</p>
+            <p><strong>City:</strong>&nbsp;${c.city}</p>
+            <p><strong>Province:</strong>&nbsp;${c.province}</p>
+            <p class="divider"><strong>Postal Code:</strong>&nbsp;${c.postal_code}</p>
+            <p><strong>Contact:</strong>&nbsp;${c.contact}</p>
+            <p><strong>Phone:</strong>&nbsp;${c.phone}</p>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui two buttons">
+            <button type="button" class="small ui red basic button" click.delegate="delete(c)">
+              <i class="icon trash"></i>
+              Delete
+            </button>
+            <button type="button" class="small ui grey basic button" click.delegate="edit(c)">
+              <i class="icon edit"></i>
+              Edit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

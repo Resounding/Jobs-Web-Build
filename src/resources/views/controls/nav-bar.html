@@ -1,0 +1,27 @@
+<template>
+    <div id="main-menu" class="ui inverted segment">
+        <div class="ui container">
+            <div class="ui large secondary inverted pointing menu">
+                <a href="#" class="item logo-item">
+                    <img src="images/logo.png" alt="Logo" class="logo">
+                    <span>Langendoen Mechanical</span>
+                </a>
+                <a repeat.for="item of router.navigation" href.bind="item.href" class="item ${item.isActive ? 'active' : ''} ${item.settings.hideMobile ? 'hide-mobile' : ''}">
+                    <i if.bind="item.settings.icon" class="icon ${item.settings.icon}"></i>
+                    ${item.title}
+                </a>
+                <a class="item hide-mobile" click.delegate="downloadCsv()">
+                  <i class="cloud download icon"></i>
+                  Export
+                </a>
+                <div class="ui right dropdown item">
+                    ${userName}
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <button class="item" click.trigger="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

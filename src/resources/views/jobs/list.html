@@ -1,0 +1,73 @@
+<template>
+  <require from="./list-item"></require>
+  <require from="./close-job"></require>
+
+  <require from="styles/job-list.css"></require>
+
+  <div class="ui segment">
+    <button class="ui button basic right floated hide-desktop mini" click.trigger="toggleFiltersExpanded()"
+            show.bind="isOwner">
+      Filters
+      <i class="dropdown icon ${filtersExpanded ? 'vertically flipped' : ''}"></i>
+    </button>
+    <div class="ui two column grid stackable container ${filtersExpanded ? '' : 'hide-mobile'}" show.bind="isOwner">
+      <div class="column">
+        <div class="ui toggle checkbox">
+          <input type="checkbox" checked.bind="myJobs">
+          <label>My Jobs Only</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="showOpen">
+          <label>Show open jobs</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="showCompleted">
+          <label>Show completed jobs</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="showClosed">
+          <label>Show closed jobs</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="customerSort">
+          <label>Customer Sort</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="reverseSort">
+          <label>Reverse Sort</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="showProjects">
+          <label>Show Projects</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui toggle checkbox column">
+          <input type="checkbox" checked.bind="showServiceCalls">
+          <label>Show Service Calls</label>
+        </div>
+      </div>      
+    </div>
+
+    <div class="ui cards" show.bind="filteredItems.length">
+      <list-item job.bind="item" repeat.for="item of filteredItems" class="card"></list-item>
+    </div>
+    <div class="ui message" show.bind="!filteredItems.length">
+      <div class="header">No items</div>
+    </div>
+  </div>
+
+  <close-job id="close-job" args.bind="closeJobArgs"></close-job>
+</template>

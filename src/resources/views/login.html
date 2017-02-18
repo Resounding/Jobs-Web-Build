@@ -1,0 +1,37 @@
+<template>
+  <require from="styles/login.css"></require>
+  <div class="login-form ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui blue image header">
+        <img src="/images/logo.png" class="image">
+        Langendoen Mechanical Job Management Site
+      </h2>
+      <form class="ui large form ${errorMessage ? 'error' : ''}" submit.trigger="login($event)" method="post"
+            novalidate>
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input id="username" name="username" type="text" value.bind="username" placeholder="User Name" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input id="password" name="password" type="password" value.bind="password" placeholder="Password"
+                     required>
+            </div>
+          </div>
+          <input class="ui fluid large blue submit button" type="submit" value="Login" submit.trigger="cancel($event)">
+          <div class="ui error message" show.bind="errorMessage">
+            <ul class="list">
+              <li>
+                ${errorMessage}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

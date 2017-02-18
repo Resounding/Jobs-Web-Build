@@ -1,0 +1,12 @@
+<template>
+  <ai-dialog>
+    <ai-dialog-body>
+      <p>${message}</p>
+    </ai-dialog-body>
+
+    <ai-dialog-footer>
+      <button click.trigger="controller.cancel()" class="ui button basic">No</button>
+      <button click.trigger="controller.ok()" class="ui button primary">Yes</button>
+    </ai-dialog-footer>
+  </ai-dialog>
+</template>
