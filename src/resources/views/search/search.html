@@ -1,0 +1,109 @@
+<template>
+    <require from="styles/search.css"></require>
+    <require from="../controls/escape-quotes-value-converter"></require>
+
+    <ai-dialog id="search">
+        <ai-dialog-header>
+            <h2>Search</h2>
+            <div class="ui form">
+                <div class="fields">
+                    <div class="four wide field">
+                        <label for="zones">Zone:</label>
+                        <select id="zones" name="zones" value.bind="filter.zone">
+                            <option value="">All Zones</option>
+                            <option repeat.for="zone of zones" value="${zone}">${zone}</option>
+                        </select>
+                    </div>
+                    <div class="four wide field">
+                        <label for="plants">Plant:</label>
+                        <select id="plants" name="plants" value.bind="filter.plant">
+                            <option value="">All Plants</option>
+                            <option repeat.for="plant of plants" value="${plant.name | escapeQuotes}">${plant.name}</option>
+                        </select>
+                    </div>
+                    <div class="four wide field">
+                        <label for="crops">Crop:</label>
+                        <select id="crops" name="crops" value.bind="filter.crop">
+                            <option value="">All Crops</option>
+                            <option repeat.for="crop of crops" value="${crop}">${crop}</option>
+                        </select>
+                    </div>
+                    <div class="four wide field">
+                        <label for="customers">Customer:</label>
+                        <select id="customers" name="customers" value.bind="filter.customer">
+                            <option value="">All Customers</option>
+                            <option repeat.for="customer of customers" value="${customer}">${customer}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </ai-dialog-header>
+        <ai-dialog-body>
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th>
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('batch')">
+                                Batch
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='batch'"></i>
+                            </button>
+                        </th>
+                        <th>
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('plant')">
+                                Plant
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='plant'"></i>
+                            </button>
+                        </th>
+                        <th>
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('zone')">
+                                Zone
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='zone'"></i>
+                            </button>
+                        </th>
+                        <th class="right aligned" colspan="2">
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('pots')">
+                                Pots / Cases
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='pots'"></i>
+                            </button>
+                        </th>
+                        <th class="center aligned">
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('stickDate')">
+                                Stick
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='stickDate'"></i>
+                            </button>
+                        </th>
+                        <th class="center aligned">
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('flowerDate')">
+                                Flower
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='flowerDate'"></i>
+                            </button>
+                        </th>
+                        <th class="center aligned">
+                            <button type="button" class="ui basic button fluid" click.delegate="sortBy('shipDate')">
+                                Ship
+                                <i class="sort ${filter.sortDirection} icon" show.bind="filter.sortBy=='shipDate'"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr repeat.for="order of orders">
+                        <td class="batch">
+                            <a click.delegate="detail(order.order)">${order.batch}</a>
+                        </td>
+                        <td>${order.plant}</td>
+                        <td class="center aligned">${order.zone}</td>
+                        <td class="right aligned">${order.pots|numericFormat}</td>
+                        <td class="right aligned">${order.cases|numericFormat}</td>
+                        <td class="center aligned">${order.stickDateString}</td>
+                        <td class="center aligned">${order.flowerDateString}</td>
+                        <td class="center aligned">${order.shipDateString}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ai-dialog-body>
+        <ai-dialog-footer>
+            <button type="button" class="basic ui button" click.delegate="controller.cancel()">Close</button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>

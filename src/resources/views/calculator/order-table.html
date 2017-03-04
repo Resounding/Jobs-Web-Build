@@ -1,0 +1,39 @@
+<template>
+    <require from="styles/order-table.css"></require>
+    <require from="./event-view"></require>
+    <require from="./zone-cell"></require>
+
+    <div class="ui field toggle checkbox right floated">
+        <input type="checkbox" name="partial-space" id="partial-space" checked.bind="calculator.partialSpace">
+        <label for="partial-space">Use partial spacing</label>
+    </div>
+
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th class="center aligned">Event</th>
+                <th class="center aligned">Week</th>
+                <th class="center aligned">Tables</th>
+                <th class="center aligned" repeat.for="z of calculator.zones">
+                    <button type="button" click.delegate="select(z)" class="basic ui toggle icon button fluid"
+                            show.bind="calculator.order.stickDate">${z.name}</button>
+                    <span hide.bind="calculator.order.stickDate">${z.name}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="week of calculator.weeks">
+                <td>
+                    <div class="ui ribbon label" if.bind="week.events.length">
+                        <event-view repeat.for="event of week.events" event.bind="event" calculator.bind="calculator"></event-view>
+                    </div>
+                </td>
+                <td class="center aligned">${week.week.week}</td>
+                <td class="center aligned">${week.tables|numericFormat}</td>
+                <td class="center aligned" repeat.for="zone of week.zones | keys">
+                    <zone-cell calculator.bind="calculator" week.bind="week" zone.bind="week.zones[zone]"></zone-cell>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</template>

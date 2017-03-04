@@ -1,0 +1,57 @@
+// Calculator modal
+ai-dialog-container,
+ai-dialog-container > div,
+ai-dialog-container > div > div,
+ai-dialog-container > div > div > ai-dialog#calculator {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+}
+ai-dialog-container,
+ai-dialog-container > div {
+    height: 100vh;
+}
+ai-dialog-container > div {
+    padding: 30px;
+}
+ai-dialog-container > div > div,
+ai-dialog-container > div > div > ai-dialog#calculator {
+    height: 100%;
+}
+ai-dialog#calculator {
+    display: inline-block;
+}
+#calculator form {
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+
+    .calendar {
+        cursor: pointer;
+        padding: 5px;
+    }
+    .readonly-date {
+        padding: 5px;
+        cursor: default;
+    }
+
+    .ui[class*="right floated"] {
+        float: right;
+    }
+
+    order-table {
+        .ui.label {
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 0;
+        }
+    }
+    event-view {    
+        .ui.button {
+            padding: 0.5em;
+            margin-left: 1.5em;
+        }
+    }
+}

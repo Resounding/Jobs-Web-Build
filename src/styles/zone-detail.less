@@ -1,0 +1,32 @@
+@zone-detail-sidebar-width: 80%;
+
+#zone-detail-sidebar {
+    margin-top: 70px !important;
+
+    & > zone-detail {
+        background-color: white;
+        height: calc(100vh ~"- 100px");
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: block;
+        margin: 5px;
+        padding: 5px;
+
+        button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    }
+}
+
+.ui[class*="super-duper wide"].left.sidebar,
+.ui[class*="super-duper wide"].right.sidebar {
+    width: @zone-detail-sidebar-width;
+}
+
+.ui.visible[class*="super-duper wide"].right.sidebar ~ .fixed,
+.ui.visible[class*="super-duper wide"].right.sidebar ~ .pusher {
+    -webkit-transform: translate3d(-@zone-detail-sidebar-width, 0, 0);
+    transform: translate3d(-@zone-detail-sidebar-width, 0, 0);
+}

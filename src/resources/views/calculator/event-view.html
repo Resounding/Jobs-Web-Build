@@ -1,0 +1,12 @@
+<template>
+    <div class="calendar">
+        ${event.name} <span>(${event.date | dateFormat: 'ddd, MMM D'})</span>
+        <div class="ui dropdown button mini basic" show.bind="calculator.order.stickDate">
+            <div class="text">Move</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <div class="item" repeat.for="zone of calculator.zones" data-value="${zone.name}">${zone.name}</div>
+            </div>
+        </div>
+    </div>
+</template>

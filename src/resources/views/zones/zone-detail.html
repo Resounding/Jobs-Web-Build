@@ -1,0 +1,26 @@
+<template>
+    <require from="styles/zone-detail.css"></require>
+
+    <button type="button" class="ui icon button red" click.delegate="close()">
+        <i class="close icon"></i>
+    </button>
+
+    <h1>Zone ${model.zone.name} Details</h1>
+
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Week</th>
+                <th class="center aligned" repeat.for="plant of model.plants">${plant}</th>
+                <th class="center aligned">Available</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="week of model.weeks">
+                <td>${week.weekNumber}</td>
+                <td class="center aligned" repeat.for="plant of week.plants">${plant}</td>
+                <td class="center aligned">${week.available}</td>
+            </tr>
+        </tbody>
+    </table>
+</template>

@@ -1,0 +1,16 @@
+<template>
+    <ai-dialog>
+        <ai-dialog-body>
+            <div class="ui segment negative message">
+                <p>
+                    <i class="icon warning circle"></i>
+                    ${message}
+                </p>
+            </div>
+        </ai-dialog-body>
+
+        <ai-dialog-footer>
+            <button type="button" click.trigger="controller.cancel()" class="ui button primary">OK</button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>

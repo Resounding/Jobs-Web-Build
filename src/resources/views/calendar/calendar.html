@@ -1,0 +1,46 @@
+<template>
+    <require from="styles/calendar.css"></require>
+
+    <div id="calendar-menu" class="ui menu button-bar">
+        <div class="ui container form">
+            <div class="inline fields">
+                <label>View:</label>
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input type="radio" id="calendar-view-month" name="calendar-view" value="month" checked.bind="currentView">
+                        <label for="calendar-view-month">Month</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input type="radio" id="calendar-view-week" name="calendar-view" value="basicWeek" checked.bind="currentView">
+                        <label for="calendar-view-week">Week</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input type="radio" id="calendar-view-day" name="calendar-view" value="basicDay" checked.bind="currentView">
+                        <label for="calendar-view-day">Day</label>
+                    </div>
+                </div>
+                <div class="field">|</div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="calendar-show-weekends" checked.bind="showWeekends">
+                        <label for="calendar-show-weekends">Show Weekends</label>
+                    </div>
+                </div>
+                <div class="field">|</div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="calendar-show-weeknumbers" checked.bind="showWeekNumbers">
+                        <label for="calendar-show-weeknumbers">Show Week Numbers</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui segment">
+        <div id="calendar"></div>
+    </div>
+</template>

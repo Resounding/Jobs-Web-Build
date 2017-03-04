@@ -1,0 +1,38 @@
+// Order Detail modal
+ai-dialog-container,
+ai-dialog-container > div,
+ai-dialog-container > div > div,
+ai-dialog-container > div > div > ai-dialog#search {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+
+    ai-dialog-header {
+        h2 {
+            display: inline-block;
+        }
+        button {
+            float: right;
+        }
+    }
+
+    ai-dialog-body {
+        overflow-y: auto;
+    }
+}
+ai-dialog-container,
+ai-dialog-container > div {
+    height: 100vh;
+}
+ai-dialog-container > div {
+    padding: 30px;
+}
+ai-dialog-container > div > div,
+ai-dialog-container > div > div > ai-dialog#search {
+    height: 100%;
+}
+ai-dialog#search {
+    display: inline-block;
+}

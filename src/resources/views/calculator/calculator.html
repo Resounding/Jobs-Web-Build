@@ -1,0 +1,76 @@
+<template>
+    <require from="styles/calculator.css"></require>
+    <require from="../controls/escape-quotes-value-converter"></require>    
+    <require from="./order-table"></require>
+
+    <ai-dialog id="calculator">
+        <ai-dialog-body>
+            <form class="ui form segment">
+                <h4 class="ui dividing header">Requested Order</h4>
+                <div class="three fields">
+                    <div class="field">
+                        <label for="customer">Customer</label>
+                        <div class="ui search selection dropdown customer">
+                            <input type="hidden" name="customer" id="customer">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Choose Customer</div>
+                            <div class="menu">
+                                <div repeat.for="c of customers" class="item" data-value="${c.name}">${c.name}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Arrival Date</label>
+                        <div class="calendar">
+                            <span class="date-display">${dateDisplay}</span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="plant">Plant</label>
+                        <select name="plant" id="plant">
+                            <option value="">Choose Plant</option>
+                            <option repeat.for="p of plants" value.bind="p.name | escapeQuotes">${p.name}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="three fields">
+                    <div class="ui field">
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" id="repeating-order" checked.bind="isRepeatingOrder">
+                            <label for="repeating-order">Repeating Order</label>
+                        </div>
+                        <div class="field fields" show.bind="isRepeatingOrder">
+                            <div class="ui field inline eight wide">
+                                <label for="repeat-count"># times:</label>
+                                <input type="number" id="repeat-count" value.bind="repeatCount & debounce" style="width: 70px">
+                            </div>
+                            <div class="ui field inline eight wide">
+                                <label for="repeat-days">days apart:</label>
+                                <input type="number" id="repeat-days" value.bind="repeatDays & debounce" style="width: 70px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="pots-per-case">Pots Per Case</label>
+                        <input type="number" name="pots-per-case" id="pots-per-case" value.bind="calculator.potsPerCase" required>
+                    </div>
+                    <div class="field">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" value.bind="calculator.orderQuantity & debounce" required>
+                    </div>
+                </div>
+
+                <div class="ui divider"></div>
+                
+                <order-table calculator.bind="calculator"></order-table>
+
+                <order-table repeat.for="c of repeatCalculators" calculator.bind="c"></order-table>
+
+            </form>
+        </ai-dialog-body>
+        <ai-dialog-footer>
+            <button type="button" class="basic ui button" click.delegate="controller.cancel()">Cancel</button>
+            <button type="button" class="basic ui primary button" click.delegate="createOrder()">Save</button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>

@@ -1,0 +1,59 @@
+#week-detail-sidebar {
+    margin-top: 70px !important;
+
+    & > week-detail {
+        background-color: white;
+        height: calc(100vh ~"- 100px");
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: block;
+        margin: 5px;
+        padding: 5px;
+
+        button.close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+        }
+
+        div.calendar {
+            display: inline-block;
+            cursor: pointer;
+
+            &.start, &.end {
+                padding: 0.78571429em 0;
+            }
+        }
+        
+        .report-link {
+            padding: 0.78571429em 3px;
+            display: inline-block;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        // override for semantic-ui
+        .ui.form .inline.fields .field > .selection.dropdown, .ui.form .inline.field > .selection.dropdown {
+            min-width: 100px;
+        }
+
+        td.batch i {
+            float: right;
+        }
+    }
+}
+
+@week-detail-sidebar-width: 750px;
+
+.ui[class*="super wide"].left.sidebar,
+.ui[class*="super wide"].right.sidebar {
+    width: @week-detail-sidebar-width;
+}
+
+.ui.visible[class*="super wide"].right.sidebar ~ .fixed,
+.ui.visible[class*="super wide"].right.sidebar ~ .pusher {
+    -webkit-transform: translate3d(-@week-detail-sidebar-width, 0, 0);
+    transform: translate3d(-@week-detail-sidebar-width, 0, 0);
+}

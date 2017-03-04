@@ -1,0 +1,58 @@
+<template>
+    <div class="segment">
+        <div class="ui grid">
+            <div class="four column row">
+                <div class="left floated column">
+                    <h1 class="ui left aligned header">
+                        <a route-href="route: home; params.bind: { year: lastYear}">&lt; &nbsp; ${lastYear}</a>
+                    </h1>
+                </div>
+                <div class="column">
+                    <h1 class="ui center aligned header">${year}</h1>
+                </div>
+                <div class="right floated column">
+                    <h1 class="ui right aligned header">
+                        <a route-href="route: home; params.bind: { year: nextYear}">${nextYear} &nbsp; &gt;</a>
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <table class="ui striped celled table">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th repeat.for="zone of zones" class="center aligned">
+                        <button type="button" class="ui basic button" click.delegate="showZoneDetails(zone)">${zone.name}</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="key,value of weeks">
+                    <td>
+                        <button type="button" class="ui basic button" click.delegate="showWeekDetails(value)">${value.week}</button>
+                    </td>
+                    <td repeat.for="zone of zones">${value.zones[zone.name].available|numericFormat}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="ui grid">
+            <div class="four column row">
+                <div class="left floated column">
+                    <h1 class="ui left aligned header">
+                        <a route-href="route: home; params.bind: { year: lastYear}">&lt; &nbsp; ${lastYear}</a>
+                    </h1>
+                </div>
+                <div class="column">
+                    <h1 class="ui center aligned header">${year}</h1>
+                </div>
+                <div class="right floated column">
+                    <h1 class="ui right aligned header">
+                        <a route-href="route: home; params.bind: { year: nextYear}">${nextYear} &nbsp; &gt;</a>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,41 @@
+<template>
+    <div class="ui segments">
+        <div class="ui clearing segment">
+            <button type="button" class="basic ui positive right floated button" click.delegate="addPlant()">
+                <i class="plus icon"></i>
+                Add Plant
+            </button>
+        </div>
+        <div class="ui secondary segment">
+            <table class="ui single line table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Name</th>
+                        <th class="collapsing" rowspan="2">Abbreviation</th>
+                        <th colspan="2" class="center aligned">Cuttings</th>
+                        <th class="collapsing" rowspan="2">Pots per Case</th>
+                        <th class="collapsing" rowspan="2">Lights Out</th>
+                    </tr>
+                    <tr>
+                        <th class="collapsing center aligned">Per Pot</th>
+                        <th class="collapsing center aligned">Per Table</th>                
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr repeat.for="p of plants">
+                        <td>                    
+                            <a click.delegate="detail(p)">${p.name}</a>
+                        </td>
+                        <td class="collapsing">${p.abbreviation}</td>
+                        <td class="center aligned">${p.cuttingsPerPot}</td>
+                        <td class="center aligned">${cuttingsPerTable(p)}</td>
+                        <td class="center aligned">${p.potsPerCase}</td>
+                        <td class="center aligned">
+                            <i class="icon checkmark" show.bind="p.hasLightsOut"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,192 @@
+<template>
+    <require from="styles/plant-detail.css"></require>
+
+    <ai-dialog id="plant-detail">
+        <ai-dialog-header>
+            <h2 show.bind="isNew">New Plant</h2>
+            <h2 hide.bind="isNew">${plant.name}</h2>
+        </ai-dialog-header>
+        <ai-dialog-body>
+            <form class="ui form segment">                
+                <div class="fields row">
+                    <div class="field two wide">
+                        <label for="size">Size</label>
+                        <input type="text" name="size" id="size" value.bind="plant.size" attach-focus="true">
+                    </div>
+                    <div class="field six wide">
+                        <label for="crop">Crop</label>
+                        <input type="text" name="crop" id="crop" value.bind="plant.crop">
+                    </div>
+                    <div class="field two wide">
+                        <label for="abbreviation">Abbreviation</label>
+                        <input type="text" name="abbreviation" id="abbreviation" value.bind="plant.abbreviation">
+                    </div>                    
+                    <div class="field four wide">
+                        <!-- spacer -->
+                        <label>&nbsp;</label>
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" checked.bind="plant.hasLightsOut">
+                            <label>Has Lights Out</label>
+                        </div>
+                    </div>
+                    <div class="field two wide">
+                        <label for="potsPerCase">Pots per case</label>
+                        <input type="number" name="potsPerCase" id="potsPerCase" value.bind="plant.potsPerCase">
+                    </div>
+                </div>
+                <div class="ui divider">&nbsp;</div>
+                <div class="fields row">
+                    <div class="field three wide">
+                        <label for="cuttingsPerPot">Cuttings per Pot</label>
+                        <input type="number" name="cuttingsPerPot" id="cuttingsPerPot" value.bind="plant.cuttingsPerPot">
+                    </div>
+                    <div class="field one wide">&nbsp;</div>
+                    <div class="field four wide">
+                        <label for="cuttingsPerTableTight">Cuttings per Table: Tight</label>
+                        <input type="number" name="cuttingsPerTableTight" id="cuttingsPerTableTight" value.bind="plant.cuttingsPerTable.tight">
+                    </div>
+                    <div class="field four wide">
+                        <label for="cuttingsPerTableHalf">Cuttings per Table: Half</label>
+                        <input type="number" name="cuttingsPerTableHalf" id="cuttingsPerTableHalf" value.bind="plant.cuttingsPerTable.half">
+                    </div>
+                    <div class="field four wide">
+                        <label for="cuttingsPerTableFull">Cuttings per Table: Full</label>
+                        <input type="number" name="cuttingsPerTableFull" id="cuttingsPerTableFull" value.bind="plant.cuttingsPerTable.full">
+                    </div>
+                </div>
+                <h4 class="ui horizontal divider header">
+                    <button type="button" class="tiny ui basic button" click.delegate="previousSeason()">
+                        &lt;
+                    </button>
+                    Seasons
+                    (<span innerHTML.bind="currentYear"></span>)
+                    <button type="button" class="tiny ui basic button" click.delegate="nextSeason()">
+                        &gt;
+                    </button>
+                </h4>
+                <div class="fields row">
+                    <div class="field four wide">
+                        <label>Spring</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentSeasonsYear.spring">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Summer</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentSeasonsYear.summer">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Fall</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentSeasonsYear.fall">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Winter</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentSeasonsYear.winter">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="ui horizontal divider header">
+                    <button type="button" class="tiny ui basic button" click.delegate="previousSeason()">
+                        &lt;
+                    </button>
+                    Propagation Times
+                    (<span innerHTML.bind="currentYear"></span>)
+                    <button type="button" class="tiny ui basic button" click.delegate="nextSeason()">
+                        &gt;
+                    </button>
+                </h4>
+                <div class="fields row">
+                    <div class="field four wide">
+                        <label>Spring</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentPropationTimesYear.spring">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Summer</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentPropationTimesYear.summer">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Fall</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentPropationTimesYear.fall">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Winter</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentPropationTimesYear.winter">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="ui horizontal divider header">
+                    <button type="button" class="tiny ui basic button" click.delegate="previousSeason()">
+                        &lt;
+                    </button>
+                    Flower Times
+                    (<span innerHTML.bind="currentYear"></span>)
+                    <button type="button" class="tiny ui basic button" click.delegate="nextSeason()">
+                        &gt;
+                    </button>
+                </h4>
+                <div class="fields row">
+                    <div class="field four wide">
+                        <label>Spring</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentFlowerTimesYear.spring">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Summer</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentFlowerTimesYear.summer">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Fall</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentFlowerTimesYear.fall">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                    <div class="field four wide">
+                        <label>Winter</label>
+                        <div class="ui right labeled input">
+                            <input type="number" value.bind="currentFlowerTimesYear.winter">
+                            <div class="ui basic label">weeks</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </ai-dialog-body>
+        <ai-dialog-footer>
+            <button type="button" class="ui basic red button left floated" click.delegate="delete()" data-tooltip="Click to Delete this Plant" hide.bind="isNew">
+                <i class="trash button icon"></i>
+                Delete
+            </button>
+
+            <button type="button" class="ui basic button" click.delegate="cancel()">Cancel</button>
+            <button type="button" class="ui basic primary button" click.delegate="save()">
+                <i class="save button icon"></i>
+                Save
+            </button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>

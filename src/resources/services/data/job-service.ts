@@ -56,6 +56,13 @@ export class JobService {
 
   save(job: Job): Promise<PouchUpdateResponse> {
     return new Promise((resolve, reject) => {
+      if (_.isString(job.startDate) || _.isDate(job.startDate)) {
+        job.startDate = moment(job.startDate).format('YYYY-MM-DD');
+      }
+      if (_.isString(job.endDate) || _.isDate(job.endDate)) {
+        job.endDate = moment(job.endDate).format('YYYY-MM-DD');
+      }
+
       if (!job._id) {
         this.database.nextJobNumber()
           .then(number => {
@@ -85,5 +92,19 @@ export class JobService {
 
   destroy(): Promise<any> {
     return this.database.destroy();
+  }
+
+  move(id:string, start:Date, end:Date):Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.db.get(id)
+        .then(job => {
+          job.startDate = start;
+          job.endDate = end;
+          this.db.put(job)
+            .then(resolve)
+            .catch(reject);
+        })
+        .catch(reject);
+      });
   }
 }

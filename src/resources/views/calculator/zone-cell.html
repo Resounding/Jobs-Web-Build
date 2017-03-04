@@ -1,0 +1,7 @@
+<template>
+    <button type="button" click.trigger="select()" hide.bind="zone.available==null"
+        class="ui toggle icon button fluid ${zone.available < 0 ? 'red' : 'green'} ${zone.selected ? '' : 'basic'}">
+        ${zone.available}
+    </button>
+    <span show.bind="zone.available == null">&nbsp;</span>
+</template>

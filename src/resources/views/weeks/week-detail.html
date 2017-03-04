@@ -1,0 +1,73 @@
+<template>
+    <require from="styles/week-detail.css"></require>
+
+    <button type="button" class="ui icon button red close" click.delegate="close()">
+        <i class="close icon"></i>
+    </button>
+
+    <div class="ui form">
+        <div class="fields">
+            <div class="inline field">
+                <label>Dates:</label>
+                <div class="calendar start">
+                    <span class="date-display">${startDateDisplay}</span>
+                </div>
+                &ndash;
+                <div class="calendar end">
+                    <span class="date-display">${endDateDisplay}</span>
+                </div>
+            </div>
+            <div class="inline field">
+                <label for="zones">Zone:</label>
+                <select id="zones" name="zones" value.bind="filter.zone">
+                    <option value="">All Zones</option>
+                    <option repeat.for="zone of zones" value="${zone}">${zone}</option>
+                </select>
+            </div>
+            <div class="field">
+                <button type="button" class="ui basic secondary button" click.delegate="openFlowerThisWeekReport()">
+                    <i class="file pdf outline icon"></i>
+                    Flowering
+                </button>
+
+                <button type="button" class="ui basic secondary button" click.delegate="openPlantThisWeekReport()">
+                    <i class="file pdf outline icon"></i>
+                    Planting
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Batch</th>
+                <th>Plant</th>
+                <th>Zone</th>
+                <th class="right aligned">Pots</th>
+                <th class="right aligned">Cases</th>
+                <th class="center aligned">Tables</th>
+                <th class="center aligned">Flower Date</th>
+                <th class="center aligned">Ship Week</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="order of orders" class="${order.isShippingThisWeek ? 'positive' : ''}">
+                <td class="batch">
+                    <a click.delegate="detail(order.order)">${order.batch}</a>
+                    <i class="truck icon" show.bind="order.isShippingThisWeek" title="This orders ships this week"></i>
+                    <i class="icon" show.bind="order.isFloweringThisWeek" title="This orders flowers this week">
+                        <img src="images/gerbera.png">
+                    </i>
+                </td>
+                <td>${order.plant}</td>
+                <td>${order.zone}</td>
+                <td class="right aligned">${order.pots|numericFormat}</td>
+                <td class="right aligned">${order.cases|numericFormat}</td>
+                <td class="center aligned">${order.tables|numericFormat}</td>
+                <td class="center aligned">${order.flowerDate}</td>
+                <td class="center aligned">${order.shipWeek}</td>
+            </tr>
+        </tbody>
+    </table>
+</template>
