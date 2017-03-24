@@ -1,7 +1,7 @@
 {
   "name": "jobs-web",
-  "description": "An Aurelia client application.",
-  "version": "1.2.2",
+  "description": "Langendoen Mechanical Job Management Application.",
+  "version": "1.2.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/Resounding/Jobs-Web"
