@@ -1,9 +1,25 @@
 .ui.cards {
   padding-top: 10px;
+
+  .author {
+      padding: 3px 10px;
+      border-radius: 5px;
+    }
 }
 
 @media only screen and (min-width: 1200px) {
   .ui.container.main {
-    width: calc(~"100% - " 50px);
+    width: calc(~"100% - " 50px);    
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .ui.container.main {
+    .ui.clearing.divider {
+      border-top-color: transparent;
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+      padding-top: 0.5rem;
+      margin: 0.5rem;
+    }
   }
 }

@@ -5,6 +5,10 @@
         label {
             cursor: pointer;
         }
+
+        @media only screen and (max-width: 767px) {
+            line-height: 2em;
+        }
     }
 }
 
@@ -34,4 +38,42 @@
     .fc-event-container{
         pointer-events:auto; /*events*/
     }    
+}
+
+.ui.popup {
+    .author {
+        padding: 3px 10px;
+        border-radius: 5px;
+    }
+
+    // on mobile, make the header link look clickable
+    @media only screen and (max-width: 767px) {
+        &:before {
+            display: none;
+        }
+        
+        .ui.cards > .card > .content > {
+            .close-button-wrapper {
+                text-align: right;
+                clear: both;
+                margin: -10px -10px 10px 0;
+            }
+
+            a.header {
+                white-space: nowrap;
+                color: #4183C4;
+            }
+        }
+    }
+}
+
+.ui.clearing.divider.calendar-divider {
+    border-top-color: transparent;
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+    padding-top: 0.5rem;
+    margin: 0.5rem;
+}
+
+.clear-both {
+    clear: both;
 }
