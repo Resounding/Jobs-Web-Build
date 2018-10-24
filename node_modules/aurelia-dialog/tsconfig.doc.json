@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "target": "es2015"
+  },
+  "include": [
+      "./dist/doc-temp/*.d.ts"
+  ],
+  "exclude": []
+}
