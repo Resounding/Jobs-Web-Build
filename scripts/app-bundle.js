@@ -20,7 +20,8 @@ define('text!resources/views/job-phases/table-row.html', ['module'], function(mo
 define('text!resources/views/job-phases/table-cell.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"column\" element.ref=\"el\">\r\n        <div class=\"ui dropdown status\">\r\n            <div class=\"text\" data-tooltip.bind=\"value\">\r\n                <i class=\"au-target icon circular hourglass half inverted green\" show.bind=\"value==='partial'\"></i>\r\n                <i class=\"au-target icon circular hourglass end inverted blue\" show.bind=\"value==='complete'\"></i>\r\n                <i class=\"au-target icon circular hourglass start inverted red\" show.bind=\"!value || value==='not started'\"></i>\r\n                <i class=\"au-target icon circular minus\" show.bind=\"value==='n/a'\"></i>\r\n                <span class=\"job-status-name\">${value}</span>\r\n            </div>\r\n            <i class=\"dropdown icon\"></i>\r\n            <div class=\"menu\">\r\n                <div repeat.for=\"status of statuses\" class=\"item\" data-value.bind=\"status\">\r\n                    <i class=\"au-target icon circular hourglass half inverted green\" show.bind=\"status==='partial'\"></i>\r\n                    <i class=\"au-target icon circular hourglass end inverted blue\" show.bind=\"status==='complete'\"></i>\r\n                    <i class=\"au-target icon circular hourglass start inverted red\" show.bind=\"status==='not started'\"></i>\r\n                    <i class=\"au-target icon circular minus\" show.bind=\"status==='n/a'\"></i>\r\n                    <span class=\"job-status-name\">${status}</span>\r\n                </div>\r\n            </div>\r\n        </div>                        \r\n    </div>\r\n</template>"; });
 define('text!resources/views/job-phases/list.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"ui segment\" element.ref=\"el\">\r\n      <div class=\"ui grid\">\r\n        <h2 class=\"ui header six wide column\">\r\n          <i class=\"circular tasks outline icon\"></i>\r\n          <div class=\"content\">\r\n            Job Phases\r\n          </div>\r\n        </h2>\r\n        <div class=\"ten wide column\">\r\n            <button type=\"button\" class=\"ui positive basic button right floated\" click.delegate=\"new()\">\r\n                <i class=\"icon plus\"></i>\r\n                New Phase\r\n            </button>\r\n        </div>\r\n      </div>\r\n      <div class=\"ui divider\"></div>\r\n      <div class=\"ui huge relaxed divided list\">\r\n            <div class=\"item\" repeat.for=\"phase of phases | sort:'sortOrder'\" data-id.bind=\"phase._id\">\r\n                <i class=\"circular icon move link\"></i>\r\n                <div class=\"content\">\r\n                    <i class=\"icon ${phase.cssClass}\" show.bind=\"phase.cssClass\"></i>\r\n                    <a class=\"header\" click.delegate=\"edit(phase)\">${phase.name}</a>\r\n                </div>\r\n            </tr>\r\n        </div>\r\n    </div>\r\n  </template>\r\n  "; });
 define('text!resources/views/job-phases/edit.html', ['module'], function(module) { module.exports = "<template>\n  <ux-dialog element.ref=\"el\">\n    <ux-dialog-body>\n      <form class=\"ui form\">\n        <div class=\"field\">\n          <label for=\"name\">Name:</label>\n          <input type=\"text\" id=\"name\" placeholder=\"Phase Name\" value.bind=\"phase.name\" attach-focus=\"true\" required>\n        </div>\n          <div class=\"field\">\n            <label for=\"icon\">Icon:</label>\n            <div class=\"ui fluid search normal selection dropdown\">\n                <input type=\"hidden\" id=\"icon\" value.bind=\"phase.cssClass\">\n                <i class=\"dropdown icon\"></i>\n                <div class=\"default text\">Choose Icon</div>\n                <div class=\"menu\">\n                  <div class=\"item\" repeat.for=\"i of icons\" data-value=\"${i}\">\n                    <i class=\"icon ${i}\"></i>\n                    ${i}\n                  </div>\n                </div>\n            </div>\n          </div>\n        </div>\n        </div>\n        <div class=\"ui error message\">\n          <p repeat.for=\"error of errors\">${error}</p>\n        </div>\n      </form>\n    </ux-dialog-body>\n\n    <ux-dialog-footer>\n      <button click.delegate=\"delete()\" class=\"ui icon basic button negative left floated\" show.bind=\"phase._id\">\n        <i class=\"icon trash outline\"></i>\n        Delete\n      </button>\n      <button click.delegate=\"controller.cancel()\" class=\"ui button basic\">Cancel</button>\n      <button click.delegate=\"save()\" class=\"ui icon button primary\">\n        <i class=\"icon save\"></i>\n        Save\n      </button>\n    </ux-dialog-footer>\n  </ux-dialog>\n</template>\n"; });
-define('text!resources/views/customers/list.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/customer-list.css\"></require>\n\n  <div class=\"ui segment\" id=\"customer-list\">\n    <div class=\"ui grid\">\n      <h2 class=\"ui header six wide column\">\n        <i class=\"circular building outline icon\"></i>\n        <div class=\"content\">\n          Customer List\n        </div>\n      </h2>\n      <div class=\"ten wide column\">\n        <div class=\"ui fluid icon input\">\n          <input type=\"search\" name=\"search\" placeholder=\"Search...\" value.bind=\"search & debounce\" autofocus>\n          <i class=\"search icon\"></i>\n        </div>\n      </div>\n    </div>\n    <div class=\"ui divider\"></div>\n    <div class=\"ui special cards\">\n      <div class=\"ui card\" href=\"#/${c._id}\" repeat.for=\"c of customers\">\n        <div class=\"content\">\n          <div class=\"header\">${c.name}</div>\n          <div class=\"description\">\n            <p><strong>Address:</strong>&nbsp;${c.address}</p>\n            <p><strong>City:</strong>&nbsp;${c.city}</p>\n            <p><strong>Province:</strong>&nbsp;${c.province}</p>\n            <p class=\"divider\"><strong>Postal Code:</strong>&nbsp;${c.postal_code}</p>\n            <p><strong>Contact:</strong>&nbsp;${c.contact}</p>\n            <p><strong>Phone:</strong>&nbsp;${c.phone}</p>\n          </div>\n        </div>\n        <div class=\"extra content\">\n          <div class=\"ui two buttons\">\n            <button type=\"button\" class=\"small ui red basic button\" click.delegate=\"delete(c)\">\n              <i class=\"icon trash\"></i>\n              Delete\n            </button>\n            <button type=\"button\" class=\"small ui grey basic button\" click.delegate=\"edit(c)\">\n              <i class=\"icon edit\"></i>\n              Edit\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n"; });
+define('text!resources/views/customers/merge.html', ['module'], function(module) { module.exports = "<template>\n  <ux-dialog>\n    <ul-dialog-header>\n      <h1 class=\"ui center aligned icon header\">\n        <i class=\"circular sitemap icon\"></i>\n        Merge Customer\n      </h1>\n      <div class=\"ui message centered\">\n        <p>This will <strong>replace</strong> customer ${replace.name} with the customer you select.\n          <br>Existing jobs for ${replace.name} will be updated.\n        </p>\n      </div>\n    </ul-dialog-header>\n    <ux-dialog-body>\n      <form name=\"merge-customer-dialog\" class=\"ui form\">\n        <h4 class=\"ui dividing header\">Customer to <strong>Keep</strong></h4>\n        <div class=\"field\">\n          <label for=\"customer\">Customer</label>\n          <div class=\"ui search selection dropdown customer\">\n              <input type=\"hidden\" name=\"customer\" id=\"customer\" value.bind=\"keep_id\">\n              <i class=\"dropdown icon\"></i>\n              <div class=\"default text\">Select Customer to Replace ${replace.name} with</div>\n              <div class=\"menu\">\n                  <div repeat.for=\"customer of customers\" class=\"item\" data-value.bind=\"customer._id\" data-text.bind=\"customer.name\">\n                      ${customer.name}\n                  </div>\n              </div>\n          </div>\n        </div>        \n      </form>\n      <div class=\"ui error message\" show.bind=\"error\">\n        <p>${error}</p>\n      </div>\n    </ux-dialog-body>\n\n    <ux-dialog-footer>\n      <button click.trigger=\"controller.cancel()\" class=\"ui button basic\">Cancel</button>\n      <button click.trigger=\"save()\" class=\"ui button primary\">Merge</button>\n    </ux-dialog-footer>\n  </ux-dialog>\n</template>\n"; });
+define('text!resources/views/customers/list.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/customer-list.css\"></require>\n\n  <div class=\"ui segment\" id=\"customer-list\">\n    <div class=\"ui grid\">\n      <h2 class=\"ui header six wide column\">\n        <i class=\"circular building outline icon\"></i>\n        <div class=\"content\">\n          Customer List\n        </div>\n      </h2>\n      <div class=\"ten wide column\">\n        <div class=\"ui fluid icon input\">\n          <input type=\"search\" name=\"search\" placeholder=\"Search...\" value.bind=\"search & debounce\" autofocus>\n          <i class=\"search icon\"></i>\n        </div>\n      </div>\n    </div>\n    <div class=\"ui divider\"></div>\n    <div class=\"ui special cards\">\n      <div class=\"ui card\" href=\"#/${c._id}\" repeat.for=\"c of customers\">\n        <div class=\"content\">\n          <div class=\"header\">${c.name}</div>\n          <div class=\"description\">\n            <p><strong>Address:</strong>&nbsp;${c.address}</p>\n            <p><strong>City:</strong>&nbsp;${c.city}</p>\n            <p><strong>Province:</strong>&nbsp;${c.province}</p>\n            <p class=\"divider\"><strong>Postal Code:</strong>&nbsp;${c.postal_code}</p>\n            <p><strong>Contact:</strong>&nbsp;${c.contact}</p>\n            <p><strong>Phone:</strong>&nbsp;${c.phone}</p>\n          </div>\n        </div>\n        <div class=\"extra content\">\n          <div class=\"ui three buttons\">\n            <button type=\"button\" class=\"small ui red basic button\" click.delegate=\"delete(c)\">\n              <i class=\"icon trash\"></i>\n              Delete\n            </button>\n            <button type=\"button\" class=\"small ui blue basic button\" click.delegate=\"edit(c)\">\n              <i class=\"icon edit\"></i>\n              Edit\n            </button>\n            <button type=\"button\" class=\"small ui grey basic button\" click.delegate=\"merge(c)\">\n              <i class=\"icon sitemap\"></i>\n              Merge\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n"; });
 define('text!resources/views/customers/edit.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/edit-customer-dialog.css\"></require>\n  <ux-dialog>\n    <ux-dialog-body>\n      <form name=\"edit-customer-dialog\" class=\"ui form\">\n        <div class=\"field\">\n          <label for=\"name\">Name:</label>\n          <input type=\"text\" id=\"name\" placeholder=\"ABC Greenhouses\" value.bind=\"customer.name\" attach-focus=\"true\" required>\n        </div>\n        <h4 class=\"ui dividing header\">Address Information</h4>\n        <div class=\"two fields\">\n          <div class=\"field\">\n            <label for=\"address\">Address:</label>\n            <input type=\"text\" id=\"address\" placeholder=\"123 Main St.\" value.bind=\"customer.address\">\n          </div>\n          <div class=\"field\">\n            <label for=\"city\">City:</label>\n            <input type=\"text\" id=\"city\" placeholder=\"Vineland\" value.bind=\"customer.city\">\n          </div>\n        </div>\n        <div class=\"two fields\">\n          <div class=\"field\">\n            <label for=\"province\">Province:</label>\n            <input type=\"text\" id=\"province\" placeholder=\"ON\" value.bind=\"customer.province\">\n          </div>\n          <div class=\"field\">\n            <label for=\"postal-code\">Postal Code:</label>\n            <input type=\"text\" id=\"postal-code\" placeholder=\"L0R 2A3\" value.bind=\"customer.postal_code\">\n          </div>\n        </div>\n        <h4 class=\"ui dividing header\">Contact Information</h4>\n        <div class=\"two fields\">\n          <div class=\"field\">\n            <label for=\"contact\">Contact Name:</label>\n            <input type=\"text\" id=\"contact\" placeholder=\"John Doe\" value.bind=\"customer.contact\">\n          </div>\n          <div class=\"field\">\n            <label for=\"phone\">Phone:</label>\n            <input type=\"tel\" id=\"phone\" placeholder=\"905 555 1234\" value.bind=\"customer.phone\">\n          </div>\n        </div>\n      </form>\n    </ux-dialog-body>\n\n    <ux-dialog-footer>\n      <button click.trigger=\"controller.cancel()\" class=\"ui button basic\">Cancel</button>\n      <button click.trigger=\"save()\" class=\"ui button primary\">Save</button>\n    </ux-dialog-footer>\n  </ux-dialog>\n</template>\n"; });
 define('text!resources/views/controls/prompt.html', ['module'], function(module) { module.exports = "<template>\n  <ux-dialog>\n    <ux-dialog-body>\n      <p>${message}</p>\n    </ux-dialog-body>\n\n    <ux-dialog-footer>\n      <button click.trigger=\"controller.cancel()\" class=\"ui button basic\">No</button>\n      <button click.trigger=\"controller.ok()\" class=\"ui button primary\">Yes</button>\n    </ux-dialog-footer>\n  </ux-dialog>\n</template>\n"; });
 define('text!resources/views/controls/nav-bar.html', ['module'], function(module) { module.exports = "<template>\n    <div id=\"main-menu\" class=\"ui inverted segment\">\n        <div class=\"ui container\">\n            <div class=\"ui large secondary inverted pointing menu\">\n                <a href=\"#\" class=\"item logo-item\">\n                    <img src=\"images/logo.png\" alt=\"Logo\" class=\"logo\">\n                    <span>Langendoen Mechanical</span>\n                </a>\n                <a repeat.for=\"item of navItems\" href.bind=\"item.href\" class=\"item ${item.isActive ? 'active' : ''} ${item.settings.hideMobile ? 'hide-mobile' : ''} ${item.settings.hideDesktop ? 'hide-desktop' : ''}\">\n                    <i if.bind=\"item.settings.icon\" class=\"icon ${item.settings.icon}\"></i>\n                    <span class=\"hide-mobile\">${item.title}</span>\n                    <span class=\"hide-desktop\">${item.settings.mobileTitle}</span>\n                </a>\n                <a class=\"item hide-mobile\" click.delegate=\"downloadCsv()\" show.one-time=\"isOwner\">\n                  <i class=\"cloud download icon\"></i>\n                  Export\n                </a>\n                <div class=\"ui right dropdown item\">\n                    ${userName}\n                    <i class=\"dropdown icon\"></i>\n                    <div class=\"menu\">\n                        <a repeat.for=\"item of settingsNavItems\" href.bind=\"item.href\" class=\"item ${item.isActive ? 'active' : ''} ${item.settings.hideMobile ? 'hide-mobile' : ''} ${item.settings.hideDesktop ? 'hide-desktop' : ''}\">\n                            <i if.bind=\"item.settings.icon\" class=\"icon ${item.settings.icon}\"></i>\n                            <span class=\"hide-mobile\">${item.title}</span>\n                            <span class=\"hide-desktop\">${item.settings.mobileTitle}</span>\n                        </a>\n                        <div class=\"divider\" show.bind=\"settingsNavItems.length\"></div>\n                        \n                        <button class=\"item\" click.trigger=\"logout()\">Logout</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</template>\n"; });
@@ -1036,6 +1037,7 @@ define('resources/views/jobs/list',["require", "exports", "aurelia-framework", "
             this.filtersExpanded = false;
             this.closeJobArgs = new close_job_1.CloseJobArgs;
             this.showCompleted = auth.isInRole(auth_1.Roles.OfficeAdmin);
+            this.myJobs = !auth.isInRole(auth_1.Roles.Owner);
             this.filters = job_list_filters_1.JobListFilters.load(this);
             Object.assign(this, this.filters);
         }
@@ -2282,7 +2284,114 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('resources/views/customers/list',["require", "exports", "aurelia-framework", "aurelia-dialog", "./edit", "../controls/prompt", "../../services/data/customer-service", "../../services/notifications"], function (require, exports, aurelia_framework_1, aurelia_dialog_1, edit_1, prompt_1, customer_service_1, notifications_1) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+define('resources/views/customers/merge',["require", "exports", "aurelia-framework", "aurelia-dialog", "jquery", "../../services/data/customer-service"], function (require, exports, aurelia_framework_1, aurelia_dialog_1, $, customer_service_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var MergeCustomer = (function () {
+        function MergeCustomer(element, service, controller) {
+            this.element = element;
+            this.service = service;
+            this.controller = controller;
+            this.error = null;
+        }
+        MergeCustomer.prototype.activate = function (customer) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            this.replace = customer;
+                            _a = this;
+                            return [4, this.service.getAll()];
+                        case 1:
+                            _a.customers = _b.sent();
+                            return [2];
+                    }
+                });
+            });
+        };
+        MergeCustomer.prototype.attached = function () {
+            $('.dropdown', this.element).dropdown({
+                onChange: this.onChange.bind(this)
+            });
+        };
+        MergeCustomer.prototype.detached = function () {
+            $('.dropdown', this.element).dropdown('destroy');
+        };
+        MergeCustomer.prototype.onChange = function (value) {
+            var customer = this.customers.find(function (c) { return c._id === value; });
+            if (customer) {
+                this.error = null;
+                this.keep = customer;
+            }
+        };
+        MergeCustomer.prototype.save = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    this.error = null;
+                    if (!this.keep) {
+                        this.error = "Please choose the customer to replace " + this.replace.name + " with.";
+                        return [2];
+                    }
+                    this.controller.ok(this.keep);
+                    return [2];
+                });
+            });
+        };
+        MergeCustomer = __decorate([
+            aurelia_framework_1.autoinject(),
+            __metadata("design:paramtypes", [Element, customer_service_1.CustomerService, aurelia_dialog_1.DialogController])
+        ], MergeCustomer);
+        return MergeCustomer;
+    }());
+    exports.MergeCustomer = MergeCustomer;
+});
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+define('resources/views/customers/list',["require", "exports", "aurelia-framework", "aurelia-dialog", "./edit", "./merge", "../controls/prompt", "../../services/data/customer-service", "../../services/notifications"], function (require, exports, aurelia_framework_1, aurelia_dialog_1, edit_1, merge_1, prompt_1, customer_service_1, notifications_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var CustomerList = (function () {
@@ -2337,6 +2446,20 @@ define('resources/views/customers/list',["require", "exports", "aurelia-framewor
                 _this.customerService.save(result.output)
                     .then(function () {
                     notifications_1.Notifications.success('Customer saved successfully');
+                    _this.refresh();
+                })
+                    .catch(notifications_1.Notifications.error);
+            });
+        };
+        CustomerList.prototype.merge = function (customer) {
+            var _this = this;
+            this.dialogService.open({ viewModel: merge_1.MergeCustomer, model: customer })
+                .whenClosed(function (result) {
+                if (result.wasCancelled)
+                    return;
+                _this.customerService.merge(result.output, customer)
+                    .then(function () {
+                    notifications_1.Notifications.success('Customer merged successfully');
                     _this.refresh();
                 })
                     .catch(notifications_1.Notifications.error);
@@ -4614,7 +4737,42 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('resources/services/data/customer-service',["require", "exports", "aurelia-framework", "./db", "../../models/customer"], function (require, exports, aurelia_framework_1, db_1, customer_1) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+define('resources/services/data/customer-service',["require", "exports", "aurelia-framework", "./db", "../../models/customer", "../../models/job"], function (require, exports, aurelia_framework_1, db_1, customer_1, job_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var CustomerService = (function () {
@@ -4672,6 +4830,32 @@ define('resources/services/data/customer-service',["require", "exports", "aureli
                 _this.db.remove(customer)
                     .then(function () { return Promise.resolve(customer); })
                     .catch(reject);
+            });
+        };
+        CustomerService.prototype.merge = function (keep, replace) {
+            return __awaiter(this, void 0, void 0, function () {
+                var result, jobs, _i, jobs_1, job;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, this.db.find({ selector: { type: job_1.JobDocument.DOCUMENT_TYPE, 'customer._id': replace._id } })];
+                        case 1:
+                            result = _a.sent(), jobs = result.docs;
+                            _i = 0, jobs_1 = jobs;
+                            _a.label = 2;
+                        case 2:
+                            if (!(_i < jobs_1.length)) return [3, 5];
+                            job = jobs_1[_i];
+                            job.customer = Object.assign({}, keep);
+                            return [4, this.db.post(job)];
+                        case 3:
+                            _a.sent();
+                            _a.label = 4;
+                        case 4:
+                            _i++;
+                            return [3, 2];
+                        case 5: return [2];
+                    }
+                });
             });
         };
         CustomerService = __decorate([
@@ -5333,6 +5517,6 @@ define('environment',["require", "exports"], function (require, exports) {
     };
 });
 
-define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "1.6.1",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.3.0",\n    "aurelia-dialog": "^1.0.0",\n    "aurelia-fetch-client": "^1.6.0",\n    "aurelia-pal": "^1.8.0",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.1",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.3.1",\n    "moment": "^2.18.1",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^6.3.4",\n    "pouchdb-find": "^6.3.4",\n    "requirejs": "^2.3.5",\n    "semantic-ui-calendar": "^0.0.6",\n    "semantic-ui-css": "^2.2.4",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^2.0.4"\n  },\n  "peerDependencies": {},\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/node": "^8.0.53",\n    "@types/numeral": "0.0.25",\n    "@types/pouchdb-core": "^6.1.9",\n    "@types/pouchdb-find": "^6.3.1",\n    "@types/toastr": "^2.1.35",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "3.1.1",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
+define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "1.7.0",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.3.0",\n    "aurelia-dialog": "^1.0.0",\n    "aurelia-fetch-client": "^1.6.0",\n    "aurelia-pal": "^1.8.0",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.1",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.3.1",\n    "moment": "^2.18.1",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^6.3.4",\n    "pouchdb-find": "^6.3.4",\n    "requirejs": "^2.3.5",\n    "semantic-ui-calendar": "^0.0.6",\n    "semantic-ui-css": "^2.2.4",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^2.0.4"\n  },\n  "peerDependencies": {},\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/node": "^8.0.53",\n    "@types/numeral": "0.0.25",\n    "@types/pouchdb-core": "^6.1.9",\n    "@types/pouchdb-find": "^6.3.1",\n    "@types/toastr": "^2.1.35",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "3.1.1",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
 
 //# sourceMappingURL=app-bundle.js.map
