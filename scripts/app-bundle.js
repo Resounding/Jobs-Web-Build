@@ -867,9 +867,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('resources/views/jobs/search',["require", "exports", "aurelia-framework", "../../services/notifications", "../../services/data/job-service", "../../utilities/equals", "../../services/config"], function (require, exports, aurelia_framework_1, notifications_1, job_service_1, equals_1, config_1) {
+define('resources/views/jobs/search',["require", "exports", "aurelia-framework", "../../services/notifications", "../../services/data/job-service", "../../utilities/equals", "../../utilities/sort", "../../services/config"], function (require, exports, aurelia_framework_1, notifications_1, job_service_1, equals_1, sort_1, config_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var sortByNumber = sort_1.sortBy('number');
     var Search = (function () {
         function Search(jobService) {
             var _this = this;
@@ -892,8 +893,10 @@ define('resources/views/jobs/search',["require", "exports", "aurelia-framework",
                     return [];
                 return this.allJobs.filter(function (j) {
                     return equals_1.contains(j.customer.name, _this.search) ||
-                        equals_1.contains(j.name, _this.search);
-                });
+                        equals_1.contains(j.name, _this.search) ||
+                        equals_1.contains(j.number, _this.search);
+                })
+                    .sort(sortByNumber);
             },
             enumerable: true,
             configurable: true
@@ -3385,6 +3388,36 @@ define('resources/value-converters/sort-value-converter',["require", "exports"],
     }
 });
 
+define('resources/utilities/sort',["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function sortBy(propertyName, direction) {
+        var factor = direction === 'descending' ? -1 : 1;
+        return function (a, b) {
+            if (a == null && b == null)
+                return 0;
+            if (a != null && b == null)
+                return 1 * factor;
+            if (a == null && b != null)
+                return -1 * factor;
+            var first = a[propertyName], second = b[propertyName];
+            if (typeof first === 'number' && typeof (second === 'number')) {
+                return (first < second ? -1 : 1) * factor;
+            }
+            if (typeof first === 'boolean' && typeof (second === 'boolean')) {
+                return ((first === second) ? 0 : first ? 1 : -1) * factor;
+            }
+            if (toString.call(first) === '[object Date]' && toString.call(second) === '[object Date]') {
+                return (first < second ? -1 : first > second ? 1 : 0) * factor;
+            }
+            first = (first || '').toString().toLowerCase();
+            second = (second || '').toString().toLowerCase();
+            return (first < second ? -1 : first > second ? 1 : 0) * factor;
+        };
+    }
+    exports.sortBy = sortBy;
+});
+
 define('resources/utilities/equals',["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -5807,6 +5840,9 @@ define('resources/models/foreman',["require", "exports"], function (require, exp
             'Bemar',
             'Bruce',
             'Dan',
+            'Daymon',
+            'Gilbert',
+            'Henry',
             'Kurt',
             'Matt',
             'Marc',
@@ -5820,6 +5856,9 @@ define('resources/models/foreman',["require", "exports"], function (require, exp
             bemar: 'blueviolet',
             bruce: '#b9c7d2',
             dan: '#73d3e7',
+            daymon: 'lightblue',
+            gilbert: 'seagreen',
+            henry: 'chocolate',
             kurt: '#ffbc70',
             matt: 'crimson',
             marc: 'violet',
@@ -5953,6 +5992,6 @@ define('environment',["require", "exports"], function (require, exports) {
     };
 });
 
-define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "2.2.0",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.3.3",\n    "aurelia-dialog": "^2.0.0-rc.7",\n    "aurelia-fetch-client": "^1.8.2",\n    "aurelia-pal": "^1.8.2",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.5",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.4.1",\n    "moment": "^2.24.0",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^6.3.4",\n    "pouchdb-find": "^6.3.4",\n    "requirejs": "^2.3.6",\n    "semantic-ui-calendar": "^0.0.6",\n    "semantic-ui-css": "^2.2.4",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^3.0.0"\n  },\n  "peerDependencies": {},\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/jquery": "^3.3.31",\n    "@types/node": "^12.7.5",\n    "@types/numeral": "0.0.26",\n    "@types/pouchdb-core": "^6.1.9",\n    "@types/pouchdb-find": "^6.3.1",\n    "@types/toastr": "^2.1.37",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "^3.6.3",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
+define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "2.3.2",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.3.3",\n    "aurelia-dialog": "^2.0.0-rc.7",\n    "aurelia-fetch-client": "^1.8.2",\n    "aurelia-pal": "^1.8.2",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.5",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.4.1",\n    "moment": "^2.24.0",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^6.3.4",\n    "pouchdb-find": "^6.3.4",\n    "requirejs": "^2.3.6",\n    "semantic-ui-calendar": "^0.0.6",\n    "semantic-ui-css": "^2.2.4",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^3.0.0"\n  },\n  "peerDependencies": {},\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/jquery": "^3.3.31",\n    "@types/node": "^12.7.5",\n    "@types/numeral": "0.0.26",\n    "@types/pouchdb-core": "^6.1.9",\n    "@types/pouchdb-find": "^6.3.1",\n    "@types/toastr": "^2.1.37",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "^3.6.3",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
 
 //# sourceMappingURL=app-bundle.js.map
