@@ -24,7 +24,7 @@
     "pouchdb": "^8.0.0",
     "pouchdb-find": "^8.0.0",
     "requirejs": "^2.3.6",
-    "semantic-ui-calendar": "^0.0.6",
+    "semantic-ui-calendar": "^0.0.8",
     "semantic-ui-css": "^2.5.0",
     "sortablejs": "^1.7.0",
     "text": "github:requirejs/text#latest",

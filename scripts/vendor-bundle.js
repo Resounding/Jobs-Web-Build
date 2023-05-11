@@ -18451,47 +18451,12 @@ function fileHasChanged(localDoc, remoteDoc, filename) {
          localDoc._attachments[filename].digest !== remoteDoc._attachments[filename].digest;
 }
 
-// changes as per https://github.com/pouchdb/pouchdb/issues/7558
-
-// original
-// function getDocAttachments(db, doc) {
-//   var filenames = Object.keys(doc._attachments);
-//   return Promise.all(filenames.map(function (filename) {
-//     return db.getAttachment(doc._id, filename, {rev: doc._rev});
-//   }));
-// }
-
-// modified
 function getDocAttachments(db, doc) {
   var filenames = Object.keys(doc._attachments);
-  return Promise.all(filenames.map(function (filename) {    
-    //return db.getAttachment(doc._id, filename, {rev: doc._rev}); // original line
-    return getDocAttachmentWithRetry(db, doc, filename, 1000, 1.5, 8); // modified line
+  return Promise.all(filenames.map(function (filename) {
+    return db.getAttachment(doc._id, filename, {rev: doc._rev});
   }));
 }
-
-// added method
-function getDocAttachmentWithRetry(db, doc, filename, timeout, backoff, attemptsRemaining) {  
-  return db.getAttachment(doc._id, filename, {rev: doc._rev}).catch(function(error) {
-    console.log(`Attempts remaining: ${attemptsRemaining}`);
-    if (attemptsRemaining === 1) throw error;
-    var originalTimeout = timeout;
-    timeout = timeout * backoff;
-    // delayed call
-    return delay(originalTimeout).then(function () {
-        return getDocAttachmentWithRetry(db, doc, filename, timeout, backoff, attemptsRemaining - 1);
-    });
-  });
-}
-
-// added method, for delay
-function delay(t, v) {
-  return new Promise(function(resolve) { 
-      setTimeout(resolve.bind(null, v), t)
-  });
-}
-
-// end changes
 
 function getDocAttachmentsFromTargetOrSource(target, src, doc) {
   var doCheckForLocalAttachments = isRemote(src) && !isRemote(target);
@@ -77998,7 +77963,7 @@ return root.$ = $;
 define("semantic-ui-calendar/calendar", ["jquery"], function() {
   return (function() {
 /*
- * # Semantic UI 0.0.6 - Calendar
+ * # Semantic UI 0.0.8 - Calendar
  * http://github.com/semantic-org/semantic-ui/
  *
  *
@@ -78295,12 +78260,24 @@ define("semantic-ui-calendar/calendar", ["jquery"], function() {
                     var adjacent = isDay && cellDate.getMonth() !== ((month + 12) % 12);
                     var disabled = adjacent || !module.helper.isDateInRange(cellDate, mode) || settings.isDisabled(cellDate, mode);
                     var active = module.helper.dateEqual(cellDate, date, mode);
+                    var isToday = module.helper.dateEqual(cellDate, today, mode);
                     cell.toggleClass(className.adjacentCell, adjacent);
                     cell.toggleClass(className.disabledCell, disabled);
                     cell.toggleClass(className.activeCell, active && !adjacent);
                     if (!isHour && !isMinute) {
-                      cell.toggleClass(className.todayCell, !adjacent && module.helper.dateEqual(cellDate, today, mode));
+                      cell.toggleClass(className.todayCell, !adjacent && isToday);
                     }
+
+                    // Allow for external modifications of each cell
+                    var cellOptions = {
+                      mode: mode,
+                      adjacent: adjacent,
+                      disabled: disabled,
+                      active: active,
+                      today: isToday
+                    };
+                    formatter.cell(cell, cellDate, cellOptions);
+
                     if (module.helper.dateEqual(cellDate, focusDate, mode)) {
                       //ensure that the focus date is exactly equal to the cell date
                       //so that, if selected, the correct value is set
@@ -78573,14 +78550,14 @@ define("semantic-ui-calendar/calendar", ["jquery"], function() {
               date = module.helper.sanitiseDate(date);
               date = module.helper.dateInRange(date);
 
+              var mode = module.get.mode();
               var text = formatter.datetime(date, settings);
-              if (fireChange && settings.onChange.call(element, date, text) === false) {
+              if (fireChange && settings.onChange.call(element, date, text, mode) === false) {
                 return false;
               }
 
               module.set.focusDate(date);
 
-              var mode = module.get.mode();
               if (settings.isDisabled(date, mode)) {
                 return false;
               }
@@ -79084,6 +79061,8 @@ define("semantic-ui-calendar/calendar", ["jquery"], function() {
       },
       today: function (settings) {
         return settings.type === 'date' ? settings.text.today : settings.text.now;
+      },
+      cell: function (cell, date, cellOptions) {
       }
     },
 
@@ -79287,7 +79266,7 @@ define("semantic-ui-calendar/calendar", ["jquery"], function() {
     },
 
     // callback when date changes, return false to cancel the change
-    onChange: function (date, text) {
+    onChange: function (date, text, mode) {
       return true;
     },
 
