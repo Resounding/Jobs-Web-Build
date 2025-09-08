@@ -15,12 +15,14 @@ define('text!resources/views/quotes/list.html', ['module'], function(module) { m
 define('text!resources/views/quotes/list-item.html', ['module'], function(module) { module.exports = "<template>\n    <div class=\"card\" element.ref=\"el\">\n      <div class=\"content\">\n          <div class=\"right floated meta\" style=\"max-width: 40%;\">\n              <span>${startDateDisplay}</span>\n              <span show.bind=\"quote.endDate\">&nbsp;&ndash;&nbsp;</span>\n              <br show.bind=\"quote.endDate\">\n              <span show.bind=\"quote.endDate\">${endDateDisplay}</span>\n          </div>\n          <a class=\"header\" route-href=\"route:quotes.edit;params.bind:{id: quote._id}\">\n              <i class=\"icon edit\"></i>\n              &nbsp;${jobNumberDisplay}\n          </a>\n          <div class=\"ui header\">${quote.customer.name}</div>\n      </div>\n      <div class=\"content\">\n          <div class=\"ui sub header\">\n              <button class=\"ui basic icon button right floated hide-desktop\" click.trigger=\"toggleExpanded()\">\n                  <i class=\"dropdown icon ${expanded ? 'vertically flipped' : ''}\"></i>\n              </button>\n              ${quote.name}\n          </div>\n          <p class=\"ui ${expanded ? '' : 'hide-mobile'}\">${quote.description}</p>\n      </div>\n      <div class=\"ui extra content ${expanded ? '' : 'hide-mobile'}\">\n          <div class=\"right floated author\" style.bind=\"foremanColour\">\n              <div class=\"ui dropdown foreman\">\n                  <div class=\"text\">\n                      <i class=\"icon user\" show.bind=\"quote.foreman\"></i>\n                      <i class=\"icon user plus\" hide.bind=\"quote.foreman\"></i>\n                      &nbsp;${foremanDisplay}\n                  </div>\n                  <i class=\"dropdown icon\"></i>\n                  <div class=\"menu\">\n                      <div repeat.for=\"f of foremen\" class=\"item\" data-value.bind=\"f\">${f}</div>\n                  </div>\n              </div>\n          </div>\n          <div class=\"ui dropdown status\">\n              <div class=\"text\">\n                  <i class=\"icon circular ${jobStatus.cssClass}\"></i>\n                  <span>&nbsp;${jobStatus.name}</span>\n              </div>\n              <i class=\"dropdown icon\"></i>\n              <div class=\"menu\">\n                  <div class=\"item\" repeat.for=\"status of jobStatuses\" data-value.bind=\"status.id\">\n                      <i class=\"icon circular ${status.cssClass}\"></i>\n                      <span>&nbsp;${status.name}</span>\n                  </div>\n              </div>\n          </div>\n      </div>\n    </div>\n</template>\n"; });
 define('text!resources/views/quotes/detail.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/job-detail.css\"></require>\n  <require from=\"../controls/integer-value-converter\"></require>\n\n  <div element.ref=\"el\">\n    <div class=\"ui menu button-bar\">\n      <div class=\"ui container\">\n        <button type=\"button\" class=\"ui button\" click.trigger=\"onCancelClick()\">\n          Cancel\n        </button>\n        <button\n          type=\"button\"\n          class=\"ui button positive\"\n          click.trigger=\"onSaveClick()\"\n        >\n          <i class=\"icon save\"></i>\n          Save\n        </button>\n        <button\n          type=\"button\"\n          class=\"ui button primary\"\n          click.trigger=\"onConvertToJobClick()\"\n          show.bind=\"quote._id\"\n        >\n          <i class=\"icon share\"></i>\n          Convert to Job\n        </button>\n\n        <button\n          type=\"button\"\n          class=\"ui button red basic right\"\n          click.trigger=\"onDeleteClick()\"\n          show.bind=\"quote._id\"\n        >\n          <i class=\"icon trash\"></i>\n          Delete\n        </button>\n      </div>\n    </div>\n\n    <form class=\"ui form ${errors.length ? 'error': ''}\">\n      <h2 class=\"ui\">${routeConfig.title}</h2>\n\n      <div class=\"fields\">\n        <div class=\"field eight wide\">\n          <label for=\"customer\">Customer</label>\n          <div class=\"ui search selection dropdown customer\">\n            <input\n              type=\"hidden\"\n              name=\"customer\"\n              id=\"customer\"\n              value.bind=\"customer_id\"\n            />\n            <i class=\"dropdown icon\"></i>\n            <div class=\"default text\">Select Customer</div>\n            <div class=\"menu\">\n              <div\n                repeat.for=\"customer of customers\"\n                class=\"item\"\n                data-value.bind=\"customer._id\"\n                data-text.bind=\"customer.name\"\n              >\n                ${customer.name}\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"field eight wide\">\n          <label for=\"name\">Name</label>\n          <input\n            type=\"text\"\n            id=\"name\"\n            value.bind=\"quote.name\"\n            autocomplete=\"off\"\n          />\n        </div>\n      </div>\n      <div class=\"fields\">\n        <div class=\"field sixteen wide\">\n          <label for=\"description\">Description</label>\n          <textarea\n            name=\"description\"\n            id=\"description\"\n            value.bind=\"quote.description\"\n            cols=\"30\"\n            rows=\"5\"\n          ></textarea>\n        </div>\n      </div>\n      <div class=\"fields\">\n        <div class=\"field six wide\">\n          <label for=\"jobType\">Type</label>\n          <select\n            id=\"jobType\"\n            value.bind=\"quote.job_type\"\n            class=\"ui compact dropdown\"\n          >\n            <option repeat.for=\"t of jobTypes\" value=\"${t.id}\">\n              ${t.name}\n            </option>\n          </select>\n        </div>\n      </div>\n      <div class=\"fields\">\n        <div class=\"field six wide\">\n          <label for=\"status\">Status</label>\n          <select\n            name=\"status\"\n            id=\"status\"\n            value.bind=\"quote.status\"\n            class=\"ui compact dropdown\"\n          >\n            <option repeat.for=\"s of jobStatuses\" value=\"${s.id}\">\n              ${s.name}\n            </option>\n          </select>\n        </div>\n        <div class=\"field six wide\">\n          <label for=\"billingType\">Billing Type</label>\n          <select\n            name=\"billingType\"\n            id=\"billingType\"\n            value.bind=\"quote.billing_type\"\n            class=\"ui compact dropdown\"\n          >\n            <option repeat.for=\"bt of billingTypes\" value=\"${bt.id}\">\n              ${bt.name}\n            </option>\n          </select>\n        </div>\n        <div class=\"field six wide\">\n          <label for=\"jobType\">Work Type</label>\n          <select\n            name=\"workType\"\n            id=\"workType\"\n            value.bind=\"quote.work_type\"\n            class=\"ui compact dropdown\"\n          >\n            <option repeat.for=\"wt of workTypes\" value=\"${wt.id}\">\n              ${wt.name}\n            </option>\n          </select>\n        </div>\n      </div>\n      <div class=\"fields\">\n        <div class=\"field six wide\">\n          <label for=\"start\">Scheduled Start</label>\n          <div class=\"ui calendar start\">\n            <div class=\"ui input compact left icon\">\n              <i class=\"calendar icon\"></i>\n              <input\n                type=\"text\"\n                placeholder=\"Date/Time\"\n                id=\"start\"\n                name=\"start\"\n                autocomplete=\"off\"\n              />\n            </div>\n          </div>\n        </div>\n        <div class=\"field six wide\">\n          <label for=\"start\">Scheduled End</label>\n          <div class=\"ui calendar end\">\n            <div class=\"ui input compact left icon\">\n              <i class=\"calendar icon\"></i>\n              <input\n                type=\"text\"\n                placeholder=\"Date/Time\"\n                id=\"end\"\n                name=\"end\"\n                autocomplete=\"off\"\n              />\n            </div>\n          </div>\n        </div>\n      </div>\n      <div class=\"fields\">\n        <div class=\"field sixteen wide\">\n          <label for=\"notes\">Notes</label>\n          <textarea\n            name=\"notes\"\n            id=\"notes\"\n            value.bind=\"quote.notes\"\n            cols=\"30\"\n            rows=\"3\"\n          ></textarea>\n        </div>\n      </div>\n      <div class=\"ui error message\">\n        <p repeat.for=\"error of errors\">${error}</p>\n      </div>\n    </form>\n  </div>\n</template>\n"; });
 define('text!resources/views/login.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/login.css\"></require>\n  <div class=\"login-form ui middle aligned center aligned grid\">\n    <div class=\"column\">\n      <h2 class=\"ui blue image header\">\n        <img src=\"/images/logo.png\" class=\"image\">\n        Langendoen Mechanical Job Management Site\n      </h2>\n      <form class=\"ui large form ${errorMessage ? 'error' : ''}\" submit.trigger=\"login($event)\" method=\"post\"\n            novalidate>\n        <div class=\"ui stacked segment\">\n          <div class=\"field\">\n            <div class=\"ui left icon input\">\n              <i class=\"user icon\"></i>\n              <input id=\"username\" name=\"username\" type=\"text\" value.bind=\"username\" placeholder=\"User Name\" required>\n            </div>\n          </div>\n          <div class=\"field\">\n            <div class=\"ui left icon input\">\n              <i class=\"lock icon\"></i>\n              <input id=\"password\" name=\"password\" type=\"password\" value.bind=\"password\" placeholder=\"Password\"\n                     required>\n            </div>\n          </div>\n          <input class=\"ui fluid large blue submit button\" type=\"submit\" value=\"Login\" submit.trigger=\"cancel($event)\">\n          <div class=\"ui error message\" show.bind=\"errorMessage\">\n            <ul class=\"list\">\n              <li>\n                ${errorMessage}\n              </li>\n            </ul>\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</template>\n"; });
+define('text!resources/views/jobs/table.html', ['module'], function(module) { module.exports = "<template>\r\n  <require from=\"styles/job-list.css\"></require>\r\n  <require from=\"./table-item\" as=\"table-item\"></require>\r\n\r\n  <div class=\"ui segment\" element.ref=\"el\">\r\n    <button\r\n      class=\"ui button basic right floated hide-desktop mini\"\r\n      click.trigger=\"toggleFiltersExpanded()\"\r\n      show.bind=\"canEditAllJobs\"\r\n    >\r\n      Filters\r\n      <i\r\n        class=\"dropdown icon ${filtersExpanded ? 'vertically flipped' : ''}\"\r\n      ></i>\r\n    </button>\r\n\r\n    <div\r\n      class=\"ui two column grid stackable container ${filtersExpanded ? '' : 'hide-mobile'}\"\r\n      show.bind=\"canEditAllJobs\"\r\n    >\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox\">\r\n          <input type=\"checkbox\" checked.bind=\"myJobs\" />\r\n          <label>My Jobs Only</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showOpen\" />\r\n          <label>Show open jobs</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showCompleted\" />\r\n          <label>Show completed jobs</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showClosed\" />\r\n          <label>Show closed jobs</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"customerSort\" />\r\n          <label>Customer Sort</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"reverseSort\" />\r\n          <label>Reverse Sort</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showProjects\" />\r\n          <label>Show Projects</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showServiceCalls\" />\r\n          <label>Show Service Calls</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui input\">\r\n          <input\r\n            type=\"search\"\r\n            placeholder=\"Search...\"\r\n            value.bind=\"search\"\r\n            keyup.delegate=\"filter() & debounce\"\r\n          />\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <a route-href=\"route: jobs.new\" class=\"ui positive basic button\">\r\n          <i class=\"icon plus\"></i>\r\n          New Job\r\n        </a>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"ui clearing divider hide-desktop\"></div>\r\n\r\n    <table class=\"ui celled padded table\" show.bind=\"filteredItems.length\">\r\n      <thead>\r\n        <tr>\r\n          <th>Job Number</th>\r\n          <th>Job Name</th>\r\n          <th>Schedule Date</th>\r\n          <th>Customer</th>\r\n          <th>Foreman</th>\r\n          <th>Status</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <template repeat.for=\"item of filteredItems\">\r\n          <table-item job.bind=\"item\"></table-item>\r\n        </template>\r\n      </tbody>\r\n    </table>\r\n    <div class=\"ui message\" show.bind=\"!filteredItems.length\">\r\n      <div class=\"header\">No Jobs</div>\r\n    </div>\r\n  </div>\r\n</template>\r\n"; });
+define('text!resources/views/jobs/table-item.html', ['module'], function(module) { module.exports = "<template>\r\n  <tr element.ref=\"el\">\r\n    <td>\r\n      <a route-href=\"route:jobs.edit;params.bind:{id: job._id}\">\r\n        <i class=\"icon edit\"></i>\r\n        &nbsp;${jobNumberDisplay}\r\n      </a>\r\n    </td>\r\n    <td>${job.name}</td>\r\n    <td>\r\n      <span>${startDateDisplay}</span>\r\n      <span show.bind=\"job.endDate\">&nbsp;&ndash;&nbsp;</span>\r\n      <br show.bind=\"job.endDate\" />\r\n      <span show.bind=\"job.endDate\">${endDateDisplay}</span>\r\n    </td>\r\n    <td>${job.customer.name}</td>\r\n    <td style.bind=\"foremanColour\">\r\n      <div class=\"author\">\r\n        <div class=\"ui dropdown foreman\">\r\n          <div class=\"text\">\r\n            <i class=\"icon user\" show.bind=\"job.foreman\"></i>\r\n            <i class=\"icon user plus\" hide.bind=\"job.foreman\"></i>\r\n            &nbsp;${foremanDisplay}\r\n          </div>\r\n          <i class=\"dropdown icon\"></i>\r\n          <div class=\"menu\">\r\n            <div repeat.for=\"f of foremen\" class=\"item\" data-value.bind=\"f\">\r\n              ${f}\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </td>\r\n    <td>\r\n      <div class=\"ui dropdown status\">\r\n        <div class=\"text\">\r\n          <i class=\"icon circular ${jobStatus.cssClass}\"></i>\r\n          <span>&nbsp;${jobStatus.name}</span>\r\n        </div>\r\n        <i class=\"dropdown icon\"></i>\r\n        <div class=\"menu\">\r\n          <div\r\n            class=\"item\"\r\n            repeat.for=\"status of jobStatuses\"\r\n            data-value.bind=\"status.id\"\r\n          >\r\n            <i class=\"icon circular ${status.cssClass}\"></i>\r\n            <span>&nbsp;${status.name}</span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </td>\r\n  </tr>\r\n</template>\r\n"; });
 define('text!resources/views/jobs/sub-jobs.html', ['module'], function(module) { module.exports = "<template>\n  <ux-dialog\n    style=\"\n      max-width: 600px;\n      display: flex;\n      flex-direction: column;\n      overflow-y: auto;\n      max-height: 80vh;\n    \"\n  >\n    <ux-dialog-body\n      style=\"overflow-y: auto; display: flex; flex-direction: column\"\n    >\n      <h2 class=\"ui dividing header\">\n        Sub-Job Options\n        <div class=\"ui sub header\">\n          Click the checkboxes for each sub-job to create.\n        </div>\n        <div class=\"ui sub header\">\n          You can change the job number suffix and/or the description that will\n          be appended to the job name, or add options that aren't listed.\n        </div>\n      </h2>\n      <div class=\"ui visible message\" show.bind=\"isSubJob\">\n        Note: This is already a sub-job, so should use a numeric suffix.\n      </div>\n      <form class=\"ui form grid\" style=\"overflow-y: auto\">\n        <div repeat.for=\"option of options\" class=\"row\">\n          <div class=\"field one wide column\">\n            <div class=\"ui fitted checkbox\" style=\"padding-top: 12px\">\n              <input\n                type=\"checkbox\"\n                checked.bind=\"option.checked\"\n                change.delegate=\"validateOption(option)\"\n              />\n            </div>\n          </div>\n          <div class=\"field three wide column\">\n            <input\n              type=\"text\"\n              value.bind=\"option.value\"\n              disabled.bind=\"option.checked==false\"\n              change.delegate=\"validateOption(option)\"\n            />\n          </div>\n          <div class=\"field twelve wide column\">\n            <input\n              type=\"text\"\n              value.bind=\"option.name\"\n              disabled.bind=\"option.checked==false\"\n            />\n          </div>\n          <div\n            class=\"field one wide column\"\n            show.bind=\"option.error && option.checked\"\n          >\n            &nbsp;\n          </div>\n          <div\n            class=\"field fifteen wide column\"\n            show.bind=\"option.error && option.checked\"\n          >\n            <div class=\"ui red label pointing\">${option.error}</div>\n          </div>\n          <div\n            class=\"field one wide column\"\n            show.bind=\"!option.error && option.checked\"\n          >\n            &nbsp;\n          </div>\n          <div\n            class=\"field fifteen wide column\"\n            show.bind=\"!option.error && option.checked\"\n          >\n            <div class=\"ui label pointing\">\n              New Job: ${job_prefix}-${optionJobNumber(option.value)},\n              ${optionJobName(option.name)}\n            </div>\n          </div>\n        </div>\n      </form>\n    </ux-dialog-body>\n\n    <ux-dialog-footer>\n      <button\n        type=\"button\"\n        class=\"ui icon button positive\"\n        style=\"float: left\"\n        click.delegate=\"addOption()\"\n      >\n        <i class=\"icon plus\"></i>\n        &nbsp; Add Option\n      </button>\n      <button click.trigger=\"controller.cancel()\" class=\"ui button basic\">\n        Cancel\n      </button>\n      <button click.trigger=\"save()\" class=\"ui button primary\">OK</button>\n    </ux-dialog-footer>\n  </ux-dialog>\n</template>\n"; });
 define('text!resources/views/jobs/search.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/job-search.css\"></require>\n  <require from=\"./list-item\"></require>\n\n  <div class=\"ui segment\" id=\"search-container\">\n    <div class=\"ui segments horizontal\">\n      <div class=\"ui segment\">\n          <div class=\"ui huge ${isDesktop ? 'icon' : ''} input\">\n              <input type=\"search\" placeholder=\"Search\" value.bind=\"search & debounce\" focus.bind=\"hasFocus\" autofocus>\n              <i class=\"icon search hide-mobile\"></i>\n          </div>\n      </div>\n      <div class=\"ui segment hide-mobile\">\n        <div class=\"ui header\" show.bind=\"jobs.length\">\n          Found ${jobs.length} Jobs\n        </div>\n      </div>\n    </div>    \n\n    <div class=\"ui clearing divider\"></div>\n\n    <div class=\"ui cards\" show.bind=\"jobs.length\">\n      <list-item job.bind=\"job\" repeat.for=\"job of jobs\" class=\"card\"></list-item>\n    </div>\n    <div class=\"ui message\" show.bind=\"search && !jobs.length\">\n      <div class=\"header\">No Jobs found</div>\n    </div>\n  </div>\n</template>\n"; });
-define('text!resources/views/jobs/list.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"./list-item\"></require>\n  <require from=\"./close-job\"></require>\n\n  <require from=\"styles/job-list.css\"></require>\n\n  <div class=\"ui segment\">\n    <button\n      class=\"ui button basic right floated hide-desktop mini\"\n      click.trigger=\"toggleFiltersExpanded()\"\n    >\n      Filters\n      <i\n        class=\"dropdown icon ${filtersExpanded ? 'vertically flipped' : ''}\"\n      ></i>\n    </button>\n    <div\n      class=\"ui three column grid stackable container ${filtersExpanded ? '' : 'hide-mobile'}\"\n    >\n      <div class=\"column\" show.bind=\"canViewAllJobs || canEditAllJobs\">\n        <div class=\"ui toggle checkbox\">\n          <input type=\"checkbox\" checked.bind=\"myJobs\" />\n          <label>My Jobs Only</label>\n        </div>\n      </div>\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showPending\" />\n          <label>Show Pending</label>\n        </div>\n      </div>\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showInProgress\" />\n          <label>Show In-Progress</label>\n        </div>\n      </div>\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showCompleted\" />\n          <label>Show completed jobs</label>\n        </div>\n      </div>\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showClosed\" />\n          <label>Show closed jobs</label>\n        </div>\n      </div>\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showArchived\" />\n          <label>Show archived jobs</label>\n        </div>\n      </div>\n      <div class=\"column\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"customerSort\" />\n          <label>Customer Sort</label>\n        </div>\n      </div>\n      <div class=\"column\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"reverseSort\" />\n          <label>Reverse Sort</label>\n        </div>\n      </div>\n      <div class=\"column\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showProjects\" />\n          <label>Show Projects</label>\n        </div>\n      </div>\n      <div class=\"column\">\n        <div class=\"ui toggle checkbox column\">\n          <input type=\"checkbox\" checked.bind=\"showServiceCalls\" />\n          <label>Show Service Calls</label>\n        </div>\n      </div>\n      <div class=\"column\">\n        <label for=\"billingType\">Billing Type</label>\n        <select\n          name=\"billingType\"\n          id=\"billingType\"\n          value.bind=\"billingTypeFilter\"\n          class=\"ui dropdown billing-type\"\n        >\n          <option value=\"All\">All</option>\n          <option repeat.for=\"t of billingTypes\" value=\"${t.id}\">\n            ${t.name}\n          </option>\n        </select>\n      </div>\n      <div class=\"column\">\n        <div class=\"ui input\">\n          <input\n            type=\"search\"\n            placeholder=\"Search...\"\n            value.bind=\"search\"\n            keyup.delegate=\"filter() & debounce\"\n          />\n        </div>\n      </div>\n    </div>\n\n    <div class=\"ui clearing divider hide-desktop\"></div>\n\n    <div class=\"ui cards\" show.bind=\"filteredItems.length\">\n      <list-item\n        job.bind=\"item\"\n        foremen.bind=\"foremen\"\n        repeat.for=\"item of filteredItems\"\n        class=\"card\"\n      ></list-item>\n    </div>\n    <div class=\"ui message\" show.bind=\"!filteredItems.length\">\n      <div class=\"header\">No items</div>\n    </div>\n  </div>\n\n  <close-job id=\"close-job\" args.bind=\"closeJobArgs\"></close-job>\n</template>\n"; });
-define('text!resources/views/jobs/list-item.html', ['module'], function(module) { module.exports = "<template>\n  <div class=\"content\" id.bind=\"job._id\">\n    <div class=\"right floated meta\" style=\"max-width: 40%; text-align: center\">\n      <span class=\"text-nowrap\">${startDateDisplay}</span>\n      <span show.bind=\"job.endDate\">&nbsp;&ndash;&nbsp;</span>\n      <br show.bind=\"job.endDate\" />\n      <span class=\"text-nowrap\" show.bind=\"job.endDate\">${endDateDisplay}</span>\n      <i class=\"icon asterisk\" show.bind=\"hasMultipleDates\"></i>\n    </div>\n    <a class=\"header\" route-href=\"route:jobs.edit;params.bind:{id: job._id}\">\n      <i class=\"icon building\" show.bind=\"isProject\"></i>\n      <i class=\"icon wrench\" show.bind=\"isServiceCall\"></i>\n      &nbsp;${jobNumberDisplay}\n    </a>\n    <div class=\"ui header\">${job.customer.name}</div>\n  </div>\n  <div class=\"content\">\n    <div class=\"ui sub header\">\n      <button\n        class=\"ui basic icon button right floated ${job.description ? '' : 'hide-desktop'}\"\n        click.trigger=\"toggleExpanded()\"\n      >\n        <i class=\"dropdown icon ${expanded ? 'vertically flipped' : ''}\"></i>\n      </button>\n      ${job.name}\n    </div>\n    <p class=\"ui ${expanded ? '' : 'hide-mobile hide-desktop'}\">\n      ${job.description}\n    </p>\n  </div>\n  <div class=\"ui extra grid ${expanded ? '' : 'hide-mobile'}\">\n    <div class=\"row\" style=\"padding: 0\">\n      <div class=\"eight wide column\" style=\"padding-left: 0\">\n        <div\n          class=\"ui dropdown selection fluid foreman\"\n          style.bind=\"foremanColour\"\n        >\n          <i class=\"dropdown icon\"></i>\n          <div class=\"text\">Unassigned</div>\n        </div>\n      </div>\n      <div\n        if.bind=\"billingType\"\n        class=\"eight wide column ui sub header\"\n        style=\"margin-top: 15px; padding-right: 0\"\n      >\n        ${billingType}\n      </div>\n    </div>\n    <div class=\"row\" style=\"padding: 0\">\n      <div class=\"sixteen wide column\" style=\"padding: 0\">\n        <div\n          class=\"ui dropdown selection fluid status\"\n          style=\"padding-bottom: 0.35em\"\n        >\n          <div class=\"text\">\n            <i class=\"icon circular small ${jobStatus.cssClass}\"></i>\n            <span>&nbsp;${jobStatus.name}</span>\n          </div>\n          <i class=\"dropdown icon\"></i>\n          <div class=\"menu\">\n            <div\n              class=\"item\"\n              repeat.for=\"status of jobStatuses\"\n              data-value.bind=\"status.id\"\n            >\n              <i class=\"icon circular small ${status.cssClass}\"></i>\n              <span>&nbsp;${status.name}</span>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n"; });
+define('text!resources/views/jobs/list.html', ['module'], function(module) { module.exports = "<template>\r\n  <require from=\"./list-item\" as=\"list-item\"></require>\r\n  <require from=\"./close-job\"></require>\r\n\r\n  <require from=\"styles/job-list.css\"></require>\r\n\r\n  <div class=\"ui segment\" element.ref=\"el\">\r\n    <button\r\n      class=\"ui button basic right floated hide-desktop mini\"\r\n      click.trigger=\"toggleFiltersExpanded()\"\r\n    >\r\n      Filters\r\n      <i\r\n        class=\"dropdown icon ${filtersExpanded ? 'vertically flipped' : ''}\"\r\n      ></i>\r\n    </button>\r\n    <div\r\n      class=\"ui three column grid stackable container ${filtersExpanded ? '' : 'hide-mobile'}\"\r\n    >\r\n      <div class=\"column\" show.bind=\"canViewAllJobs || canEditAllJobs\">\r\n        <div class=\"ui toggle checkbox\">\r\n          <input type=\"checkbox\" checked.bind=\"myJobs\" />\r\n          <label>My Jobs Only</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showPending\" />\r\n          <label>Show Pending</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showInProgress\" />\r\n          <label>Show In-Progress</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showCompleted\" />\r\n          <label>Show completed jobs</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showClosed\" />\r\n          <label>Show closed jobs</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\" show.bind=\"isOfficeAdmin\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showArchived\" />\r\n          <label>Show archived jobs</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"customerSort\" />\r\n          <label>Customer Sort</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"reverseSort\" />\r\n          <label>Reverse Sort</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showProjects\" />\r\n          <label>Show Projects</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui toggle checkbox column\">\r\n          <input type=\"checkbox\" checked.bind=\"showServiceCalls\" />\r\n          <label>Show Service Calls</label>\r\n        </div>\r\n      </div>\r\n      <div class=\"column\">\r\n        <label for=\"billingType\">Billing Type</label>\r\n        <select\r\n          name=\"billingType\"\r\n          id=\"billingType\"\r\n          value.bind=\"billingTypeFilter\"\r\n          class=\"ui dropdown billing-type\"\r\n        >\r\n          <option value=\"All\">All</option>\r\n          <option repeat.for=\"t of billingTypes\" value=\"${t.id}\">\r\n            ${t.name}\r\n          </option>\r\n        </select>\r\n      </div>\r\n      <div class=\"column\">\r\n        <div class=\"ui input\">\r\n          <input\r\n            type=\"search\"\r\n            placeholder=\"Search...\"\r\n            value.bind=\"search\"\r\n            keyup.delegate=\"filter() & debounce\"\r\n          />\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"ui clearing divider hide-desktop\"></div>\r\n\r\n    <div class=\"ui cards\" show.bind=\"filteredItems.length\">\r\n      <list-item\r\n        job.bind=\"item\"\r\n        foremen.bind=\"foremen\"\r\n        repeat.for=\"item of filteredItems\"\r\n        class=\"card\"\r\n      ></list-item>\r\n    </div>\r\n    <div class=\"ui message\" show.bind=\"!filteredItems.length\">\r\n      <div class=\"header\">No items</div>\r\n    </div>\r\n  </div>\r\n\r\n  <close-job id=\"close-job\" args.bind=\"closeJobArgs\"></close-job>\r\n</template>\r\n"; });
+define('text!resources/views/jobs/list-item.html', ['module'], function(module) { module.exports = "<template>\r\n  <div class=\"content\" id.bind=\"job._id\">\r\n    <div class=\"right floated meta\" style=\"max-width: 40%; text-align: center\">\r\n      <span class=\"text-nowrap\">${startDateDisplay}</span>\r\n      <span show.bind=\"job.endDate\">&nbsp;&ndash;&nbsp;</span>\r\n      <br show.bind=\"job.endDate\" />\r\n      <span class=\"text-nowrap\" show.bind=\"job.endDate\">${endDateDisplay}</span>\r\n      <i class=\"icon asterisk\" show.bind=\"hasMultipleDates\"></i>\r\n    </div>\r\n    <a class=\"header\" route-href=\"route:jobs.edit;params.bind:{id: job._id}\">\r\n      <i class=\"icon building\" show.bind=\"isProject\"></i>\r\n      <i class=\"icon wrench\" show.bind=\"isServiceCall\"></i>\r\n      &nbsp;${jobNumberDisplay}\r\n    </a>\r\n    <div class=\"ui header\">${job.customer.name}</div>\r\n  </div>\r\n  <div class=\"content\">\r\n    <div class=\"ui sub header\">\r\n      <button\r\n        class=\"ui basic icon button right floated ${job.description ? '' : 'hide-desktop'}\"\r\n        click.trigger=\"toggleExpanded()\"\r\n      >\r\n        <i class=\"dropdown icon ${expanded ? 'vertically flipped' : ''}\"></i>\r\n      </button>\r\n      ${job.name}\r\n    </div>\r\n    <p class=\"ui ${expanded ? '' : 'hide-mobile hide-desktop'}\">\r\n      ${job.description}\r\n    </p>\r\n  </div>\r\n  <div class=\"ui extra grid ${expanded ? '' : 'hide-mobile'}\">\r\n    <div class=\"row\" style=\"padding: 0\">\r\n      <div class=\"eight wide column\" style=\"padding-left: 0\">\r\n        <div\r\n          class=\"ui dropdown selection fluid foreman\"\r\n          style.bind=\"foremanColour\"\r\n        >\r\n          <i class=\"dropdown icon\"></i>\r\n          <div class=\"text\">Unassigned</div>\r\n        </div>\r\n      </div>\r\n      <div\r\n        if.bind=\"billingType\"\r\n        class=\"eight wide column ui sub header\"\r\n        style=\"margin-top: 15px; padding-right: 0\"\r\n      >\r\n        ${billingType}\r\n      </div>\r\n    </div>\r\n    <div class=\"row\" style=\"padding: 0\">\r\n      <div class=\"sixteen wide column\" style=\"padding: 0\">\r\n        <div\r\n          class=\"ui dropdown selection fluid status\"\r\n          style=\"padding-bottom: 0.35em\"\r\n        >\r\n          <div class=\"text\">\r\n            <i class=\"icon circular small ${jobStatus.cssClass}\"></i>\r\n            <span>&nbsp;${jobStatus.name}</span>\r\n          </div>\r\n          <i class=\"dropdown icon\"></i>\r\n          <div class=\"menu\">\r\n            <div\r\n              class=\"item\"\r\n              repeat.for=\"status of jobStatuses\"\r\n              data-value.bind=\"status.id\"\r\n            >\r\n              <i class=\"icon circular small ${status.cssClass}\"></i>\r\n              <span>&nbsp;${status.name}</span>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</template>\r\n"; });
 define('text!resources/views/jobs/display.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/job-detail.css\"></require>\n  <require from=\"../controls/integer-value-converter\"></require>\n\n    <div class=\"ui menu button-bar\">\n        <div class=\"ui container\">\n            <button type=\"button\"  class=\"ui button\" click.trigger=\"onCancelClick()\">Close</button>\n        </div>\n    </div>\n\n    <form class=\"ui form\">\n        <h2 class=\"ui ${isFollowup ? '' : 'dividing header'}\">${routeConfig.title}</h2>\n\n        <div class=\"fields\">\n            <div class=\"field eight wide\">\n                <label for=\"customer\">Customer</label>\n                <input type=\"text\" id=\"customer\" value.one-time=\"job.customer.name\" readonly>\n            </div>\n          <div class=\"field eight wide\">\n            <label for=\"job-name\">Job Name</label>\n            <input type=\"text\" id=\"job-name\" value.one-time=\"job.name\" readonly>\n          </div>\n        </div>\n        <div class=\"fields\">\n            <div class=\"field sixteen wide\">\n                <label for=\"description\">Job Description</label>\n                <textarea name=\"description\" id=\"description\" value.one-time=\"job.description\" cols=\"30\" rows=\"5\" readonly=\"\"></textarea>\n            </div>\n        </div>\n        <div class=\"fields\">\n            <div class=\"field six wide\">\n                <label for=\"status\">Status</label>\n                <div class=\"ui left icon input\">\n                  <i class=\"icon circular ${jobStatusClass}\"></i>\n                  <input type=\"text\" id=\"status\" value.one-time=\"job.status\" readonly>\n                </div>\n                \n            </div>\n            <div class=\"field six wide\">\n                <label for=\"workType\">Work Type</label>\n                <div class=\"ui left icon input\">\n                  <i class=\"icon building\" show.bind=\"isProject\"></i>\n                  <i class=\"icon wrench\" show.bind=\"isServiceCall\"></i>\n                  <input type=\"text\" id=\"workType\" value.one-time=\"job.job_type\" readonly>\n                </div>\n            </div>\n        </div>\n        <div class=\"fields\">\n            <div class=\"field six wide\" show.bind=\"startDate\">\n                <label for=\"start\">Scheduled Start</label>\n                  <input type=\"text\" id=\"start\" value.one-time=\"startDate\" readonly>\n            </div>\n          <div class=\"field six wide\" show.bind=\"endDate\">\n            <label for=\"end\">Scheduled End</label>\n            <input type=\"text\" id=\"end\" value.one-time=\"endDate\" readonly>\n          </div>\n        </div>\n        <div class=\"fields\">\n            <div class=\"field sixteen wide\">\n                <label for=\"notes\">Notes</label>\n                <textarea id=\"notes\" value.one-time=\"job.notes\" cols=\"30\" rows=\"3\" readonly></textarea>\n            </div>\n        </div>\n        <div class=\"ui grey header\" show.bind=\"job.creator\">Job created by ${job.creator}</div>\n    </form>\n</template>\n"; });
-define('text!resources/views/jobs/detail.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"styles/job-detail.css\"></require>\n  <require from=\"../controls/integer-value-converter\"></require>\n\n  <div class=\"ui menu button-bar\">\n    <div class=\"ui container\">\n      <button type=\"button\" class=\"ui button\" click.trigger=\"onCancelClick()\">\n        Cancel\n      </button>\n      <button\n        type=\"button\"\n        class=\"ui button positive\"\n        click.trigger=\"onSaveClick()\"\n      >\n        <i class=\"icon save\"></i>\n        Save\n      </button>\n\n      <button\n        type=\"button\"\n        class=\"ui button primary\"\n        click.trigger=\"onCreateSubJobsClick()\"\n        hide.bind=\"!canAddSubJobs\"\n      >\n        <i class=\"icon sitemap\"></i>\n        Create Sub-Jobs\n      </button>\n\n      <button\n        type=\"button\"\n        class=\"ui button red basic right\"\n        click.trigger=\"onDeleteClick()\"\n        show.bind=\"job._id\"\n      >\n        <i class=\"icon trash\"></i>\n        Delete\n      </button>\n    </div>\n  </div>\n\n  <form class=\"ui form\">\n    <h2 class=\"ui ${isFollowup ? '' : 'dividing header'}\">\n      ${routeConfig.title}\n    </h2>\n\n    <div class=\"ui header large dividing\">${job_number}</div>\n\n    <div class=\"fields\">\n      <div class=\"field eight wide\">\n        <label for=\"customer\">Customer</label>\n        <div class=\"ui search selection dropdown customer\">\n          <input\n            type=\"hidden\"\n            name=\"customer\"\n            id=\"customer\"\n            value.bind=\"customer_id\"\n          />\n          <i class=\"dropdown icon\"></i>\n          <div class=\"default text\">Select Customer</div>\n          <div class=\"menu\">\n            <div\n              repeat.for=\"customer of customers\"\n              class=\"item\"\n              data-value.bind=\"customer._id\"\n              data-text.bind=\"customer.name\"\n            >\n              ${customer.name}\n            </div>\n          </div>\n        </div>\n      </div>\n      <div class=\"field eight wide\">\n        <label for=\"job-name\">Job Name</label>\n        <input\n          type=\"text\"\n          name=\"job-name\"\n          id=\"job-name\"\n          value.bind=\"job.name\"\n          autocomplete=\"off\"\n        />\n      </div>\n    </div>\n    <div class=\"fields\">\n      <div class=\"field sixteen wide\">\n        <label for=\"description\">Job Description</label>\n        <textarea\n          name=\"description\"\n          id=\"description\"\n          value.bind=\"job.description\"\n          cols=\"30\"\n          rows=\"5\"\n        ></textarea>\n      </div>\n    </div>\n    <div class=\"fields\">\n      <div class=\"field six wide\">\n        <label for=\"jobType\">Job Type</label>\n        <select\n          name=\"jobType\"\n          id=\"jobType\"\n          value.bind=\"job.job_type\"\n          class=\"ui compact dropdown\"\n        >\n          <option repeat.for=\"t of jobTypes\" value=\"${t.id}\">${t.name}</option>\n        </select>\n      </div>\n    </div>\n    <div class=\"fields\">\n      <div class=\"field six wide\">\n        <label for=\"status\">Status</label>\n        <select\n          name=\"status\"\n          id=\"status\"\n          value.bind=\"job.status\"\n          class=\"ui compact dropdown\"\n        >\n          <option repeat.for=\"s of jobStatuses\" value=\"${s.id}\">\n            ${s.name}\n          </option>\n        </select>\n      </div>\n      <div class=\"field six wide\">\n        <label for=\"billingType\">Billing Type</label>\n        <select\n          name=\"billingType\"\n          id=\"billingType\"\n          value.bind=\"job.billing_type\"\n          class=\"ui compact dropdown\"\n        >\n          <option>Not Set</option>\n          <option repeat.for=\"bt of billingTypes\" value=\"${bt.id}\">\n            ${bt.name}\n          </option>\n        </select>\n      </div>\n      <div class=\"field six wide\">\n        <label for=\"jobType\">Work Type</label>\n        <select\n          name=\"workType\"\n          id=\"workType\"\n          value.bind=\"job.work_type\"\n          class=\"ui compact dropdown\"\n        >\n          <option repeat.for=\"wt of workTypes\" value=\"${wt.id}\">\n            ${wt.name}\n          </option>\n        </select>\n      </div>\n    </div>\n    <div class=\"fields flex-wrap\">\n      <div class=\"field six wide\">\n        <label for=\"start\">Scheduled Start</label>\n        <div class=\"ui calendar start\">\n          <div class=\"ui input compact left icon\">\n            <i class=\"calendar icon\"></i>\n            <input\n              type=\"text\"\n              placeholder=\"Date/Time\"\n              id=\"start\"\n              name=\"start\"\n              autocomplete=\"off\"\n            />\n          </div>\n        </div>\n      </div>\n      <div class=\"field six wide\">\n        <label for=\"end\">Scheduled End</label>\n        <div class=\"ui calendar end\">\n          <div class=\"ui input compact left icon\">\n            <i class=\"calendar icon\"></i>\n            <input\n              type=\"text\"\n              placeholder=\"Date/Time\"\n              id=\"end\"\n              name=\"end\"\n              autocomplete=\"off\"\n            />\n          </div>\n        </div>\n      </div>\n      <div class=\"field four wide\">&nbsp;</div>\n      <template repeat.for=\"dates of job.additionalDates\">\n        <div class=\"field six wide\">\n          <label for=\"start-${$index}\">Scheduled Start</label>\n          <div class=\"ui calendar start-${$index}\">\n            <div class=\"ui input compact left icon\">\n              <i class=\"calendar icon\"></i>\n              <input\n                type=\"text\"\n                placeholder=\"Date/Time\"\n                id=\"start-${$index}\"\n                name=\"start-${$index}\"\n              />\n            </div>\n          </div>\n        </div>\n        <div class=\"field six wide\">\n          <label for=\"end-${$index}\">Scheduled End</label>\n          <div class=\"ui calendar end-${$index}\">\n            <div class=\"ui input compact left icon\">\n              <i class=\"calendar icon\"></i>\n              <input\n                type=\"text\"\n                placeholder=\"Date/Time\"\n                id=\"end-${$index}\"\n                name=\"end-${$index}\"\n              />\n            </div>\n          </div>\n        </div>\n        <div class=\"field four wide\">\n          <label>&nbsp;</label>\n          <button\n            type=\"button\"\n            class=\"ui basic icon button red\"\n            click.delegate=\"removeDates($index)\"\n          >\n            <i class=\"icon trash alternate outline\"></i>\n          </button>\n        </div>\n      </template>\n      <div class=\"field sixteen wide\">\n        <button\n          type=\"button\"\n          class=\"ui basic button positive\"\n          click.delegate=\"addDates()\"\n        >\n          <i class=\"icon plus circle\"></i>\n          Add Start/End Dates\n        </button>\n      </div>\n    </div>\n    <div class=\"fields\">\n      <div class=\"field sixteen wide\">\n        <label for=\"notes\">Notes</label>\n        <textarea\n          name=\"notes\"\n          id=\"notes\"\n          value.bind=\"job.notes\"\n          cols=\"30\"\n          rows=\"3\"\n        ></textarea>\n      </div>\n    </div>\n    <div class=\"ui grey header\" show.bind=\"job.creator\">\n      Job created by ${job.creator}\n    </div>\n  </form>\n</template>\n"; });
+define('text!resources/views/jobs/detail.html', ['module'], function(module) { module.exports = "<template>\r\n  <require from=\"styles/job-detail.css\"></require>\r\n  <require from=\"../controls/integer-value-converter\"></require>\r\n\r\n  <div class=\"ui menu button-bar\">\r\n    <div class=\"ui container\">\r\n      <button type=\"button\" class=\"ui button\" click.trigger=\"onCancelClick()\">\r\n        Cancel\r\n      </button>\r\n      <button\r\n        type=\"button\"\r\n        class=\"ui button positive\"\r\n        click.trigger=\"onSaveClick()\"\r\n      >\r\n        <i class=\"icon save\"></i>\r\n        Save\r\n      </button>\r\n\r\n      <button\r\n        type=\"button\"\r\n        class=\"ui button primary\"\r\n        click.trigger=\"onCreateSubJobsClick()\"\r\n        show.bind=\"job._id\"\r\n      >\r\n        <i class=\"icon sitemap\"></i>\r\n        Create Sub-Jobs\r\n      </button>\r\n\r\n      <button\r\n        type=\"button\"\r\n        class=\"ui button red basic right\"\r\n        click.trigger=\"onDeleteClick()\"\r\n        show.bind=\"job._id\"\r\n      >\r\n        <i class=\"icon trash\"></i>\r\n        Delete\r\n      </button>\r\n    </div>\r\n  </div>\r\n\r\n  <form class=\"ui form\">\r\n    <h2 class=\"ui ${isFollowup ? '' : 'dividing header'}\">\r\n      ${routeConfig.title}\r\n    </h2>\r\n\r\n    <div class=\"ui header large dividing\">${job_number}</div>\r\n\r\n    <div class=\"fields\">\r\n      <div class=\"field eight wide\">\r\n        <label for=\"customer\">Customer</label>\r\n        <div class=\"ui search selection dropdown customer\">\r\n          <input\r\n            type=\"hidden\"\r\n            name=\"customer\"\r\n            id=\"customer\"\r\n            value.bind=\"customer_id\"\r\n          />\r\n          <i class=\"dropdown icon\"></i>\r\n          <div class=\"default text\">Select Customer</div>\r\n          <div class=\"menu\">\r\n            <div\r\n              repeat.for=\"customer of customers\"\r\n              class=\"item\"\r\n              data-value.bind=\"customer._id\"\r\n              data-text.bind=\"customer.name\"\r\n            >\r\n              ${customer.name}\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"field eight wide\">\r\n        <label for=\"job-name\">Job Name</label>\r\n        <input\r\n          type=\"text\"\r\n          name=\"job-name\"\r\n          id=\"job-name\"\r\n          value.bind=\"job.name\"\r\n          autocomplete=\"off\"\r\n        />\r\n      </div>\r\n    </div>\r\n    <div class=\"fields\">\r\n      <div class=\"field sixteen wide\">\r\n        <label for=\"description\">Job Description</label>\r\n        <textarea\r\n          name=\"description\"\r\n          id=\"description\"\r\n          value.bind=\"job.description\"\r\n          cols=\"30\"\r\n          rows=\"5\"\r\n        ></textarea>\r\n      </div>\r\n    </div>\r\n    <div class=\"fields\">\r\n      <div class=\"field six wide\">\r\n        <label for=\"jobType\">Job Type</label>\r\n        <select\r\n          name=\"jobType\"\r\n          id=\"jobType\"\r\n          value.bind=\"job.job_type\"\r\n          class=\"ui compact dropdown\"\r\n        >\r\n          <option repeat.for=\"t of jobTypes\" value=\"${t.id}\">${t.name}</option>\r\n        </select>\r\n      </div>\r\n    </div>\r\n    <div class=\"fields\">\r\n      <div class=\"field six wide\">\r\n        <label for=\"status\">Status</label>\r\n        <select\r\n          name=\"status\"\r\n          id=\"status\"\r\n          value.bind=\"job.status\"\r\n          class=\"ui compact dropdown\"\r\n        >\r\n          <option repeat.for=\"s of jobStatuses\" value=\"${s.id}\">\r\n            ${s.name}\r\n          </option>\r\n        </select>\r\n      </div>\r\n      <div class=\"field six wide\">\r\n        <label for=\"billingType\">Billing Type</label>\r\n        <select\r\n          name=\"billingType\"\r\n          id=\"billingType\"\r\n          value.bind=\"job.billing_type\"\r\n          class=\"ui compact dropdown\"\r\n        >\r\n          <option>Not Set</option>\r\n          <option repeat.for=\"bt of billingTypes\" value=\"${bt.id}\">\r\n            ${bt.name}\r\n          </option>\r\n        </select>\r\n      </div>\r\n      <div class=\"field six wide\">\r\n        <label for=\"jobType\">Work Type</label>\r\n        <select\r\n          name=\"workType\"\r\n          id=\"workType\"\r\n          value.bind=\"job.work_type\"\r\n          class=\"ui compact dropdown\"\r\n        >\r\n          <option repeat.for=\"wt of workTypes\" value=\"${wt.id}\">\r\n            ${wt.name}\r\n          </option>\r\n        </select>\r\n      </div>\r\n    </div>\r\n    <div class=\"fields flex-wrap\">\r\n      <div class=\"field six wide\">\r\n        <label for=\"start\">Scheduled Start</label>\r\n        <div class=\"ui calendar start\">\r\n          <div class=\"ui input compact left icon\">\r\n            <i class=\"calendar icon\"></i>\r\n            <input\r\n              type=\"text\"\r\n              placeholder=\"Date/Time\"\r\n              id=\"start\"\r\n              name=\"start\"\r\n              autocomplete=\"off\"\r\n            />\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"field six wide\">\r\n        <label for=\"end\">Scheduled End</label>\r\n        <div class=\"ui calendar end\">\r\n          <div class=\"ui input compact left icon\">\r\n            <i class=\"calendar icon\"></i>\r\n            <input\r\n              type=\"text\"\r\n              placeholder=\"Date/Time\"\r\n              id=\"end\"\r\n              name=\"end\"\r\n              autocomplete=\"off\"\r\n            />\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"field four wide\">&nbsp;</div>\r\n      <template repeat.for=\"dates of job.additionalDates\">\r\n        <div class=\"field six wide\">\r\n          <label for=\"start-${$index}\">Scheduled Start</label>\r\n          <div class=\"ui calendar start-${$index}\">\r\n            <div class=\"ui input compact left icon\">\r\n              <i class=\"calendar icon\"></i>\r\n              <input\r\n                type=\"text\"\r\n                placeholder=\"Date/Time\"\r\n                id=\"start-${$index}\"\r\n                name=\"start-${$index}\"\r\n              />\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"field six wide\">\r\n          <label for=\"end-${$index}\">Scheduled End</label>\r\n          <div class=\"ui calendar end-${$index}\">\r\n            <div class=\"ui input compact left icon\">\r\n              <i class=\"calendar icon\"></i>\r\n              <input\r\n                type=\"text\"\r\n                placeholder=\"Date/Time\"\r\n                id=\"end-${$index}\"\r\n                name=\"end-${$index}\"\r\n              />\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"field four wide\">\r\n          <label>&nbsp;</label>\r\n          <button\r\n            type=\"button\"\r\n            class=\"ui basic icon button red\"\r\n            click.delegate=\"removeDates($index)\"\r\n          >\r\n            <i class=\"icon trash alternate outline\"></i>\r\n          </button>\r\n        </div>\r\n      </template>\r\n      <div class=\"field sixteen wide\">\r\n        <button\r\n          type=\"button\"\r\n          class=\"ui basic button positive\"\r\n          click.delegate=\"addDates()\"\r\n        >\r\n          <i class=\"icon plus circle\"></i>\r\n          Add Start/End Dates\r\n        </button>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"fields grid ui form\" show.bind=\"!job._id\">\r\n      <h3>Subjobs</h3>\r\n      <div repeat.for=\"option of subjobOptions\" class=\"row\">\r\n        <div class=\"field one wide column\">\r\n          <div class=\"ui fitted checkbox\" style=\"padding-top: 12px\">\r\n            <input type=\"checkbox\" checked.bind=\"option.checked\" />\r\n            <label></label>\r\n          </div>\r\n        </div>\r\n        <div class=\"field three wide column\">\r\n          <input\r\n            type=\"text\"\r\n            value.bind=\"option.value\"\r\n            disabled.bind=\"option.checked==false\"\r\n          />\r\n        </div>\r\n        <div class=\"field twelve wide column\">\r\n          <input\r\n            type=\"text\"\r\n            value.bind=\"option.name\"\r\n            disabled.bind=\"option.checked==false\"\r\n          />\r\n        </div>\r\n        <div\r\n          class=\"field fifteen wide column\"\r\n          show.bind=\"option.error && option.checked\"\r\n        >\r\n          <div class=\"ui red label pointing\">${option.error}</div>\r\n        </div>\r\n      </div>\r\n      <button\r\n        type=\"button\"\r\n        class=\"ui icon button positive\"\r\n        style=\"float: left\"\r\n        click.delegate=\"addOption()\"\r\n      >\r\n        <i class=\"icon plus\"></i>\r\n        &nbsp; Add Option\r\n      </button>\r\n    </div>\r\n\r\n    <div class=\"fields\" show.bind=\"!job._id\">\r\n      <div class=\"field sixteen wide\">\r\n        <div class=\"ui toggle checkbox\">\r\n          <label for=\"close-original-job\" class=\"label\"\r\n            >Close original job</label\r\n          >\r\n          <input\r\n            name=\"close-original-job\"\r\n            type=\"checkbox\"\r\n            checked.bind=\"closeOriginalJob\"\r\n            disabled.bind=\"!subjobOptionsChecked\"\r\n          />\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"fields\">\r\n      <div class=\"field sixteen wide\">\r\n        <label for=\"notes\">Notes</label>\r\n        <textarea\r\n          name=\"notes\"\r\n          id=\"notes\"\r\n          value.bind=\"job.notes\"\r\n          cols=\"30\"\r\n          rows=\"3\"\r\n        ></textarea>\r\n      </div>\r\n    </div>\r\n    <div class=\"ui grey header\" show.bind=\"job.creator\">\r\n      Job created by ${job.creator}\r\n    </div>\r\n  </form>\r\n</template>\r\n"; });
 define('text!resources/views/jobs/close-job.html', ['module'], function(module) { module.exports = "<template>\n    <form class=\"ui big form small modal close-job\">\n        <i class=\"close icon\"></i>\n        <div class=\"header\">Close Job</div>\n        <div class=\"actions\">\n            <button class=\"ui button cancel\">Cancel</button>\n            <button class=\"ui button positive\">OK</button>\n        </div>\n    </form>\n</template>\n"; });
 define('text!resources/views/job-phases/table.html', ['module'], function(module) { module.exports = "<template>\r\n    <require from=\"styles/job-phases-table.css\"></require>\r\n    <require from=\"./table-row\" as=\"table-row\"></require>\r\n    <div id=\"job-phases-table\" class=\"ui segment\" element.ref=\"el\">\r\n        <div class=\"ui grid\">\r\n            <h2 class=\"ui header six wide column\">\r\n                <i class=\"circular table outline icon\"></i>\r\n                <div class=\"content\">\r\n                    Phase List\r\n                </div>\r\n            </h2>\r\n        </div>\r\n        <div class=\"ui divider\"></div>\r\n        <div class=\"ui two column grid stackable container\">\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox\">\r\n                <input type=\"checkbox\" checked.bind=\"myJobs\">\r\n                <label>My Jobs Only</label>\r\n                </div>\r\n            </div>\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox column\">\r\n                <input type=\"checkbox\" checked.bind=\"showOpen\">\r\n                <label>Show open jobs</label>\r\n                </div>\r\n            </div>\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox column\">\r\n                <input type=\"checkbox\" checked.bind=\"showCompleted\">\r\n                <label>Show completed jobs</label>\r\n                </div>\r\n            </div>\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox column\">\r\n                <input type=\"checkbox\" checked.bind=\"showClosed\">\r\n                <label>Show closed jobs</label>\r\n                </div>\r\n            </div>\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox column\">\r\n                <input type=\"checkbox\" checked.bind=\"customerSort\">\r\n                <label>Customer Sort</label>\r\n                </div>\r\n            </div>\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox column\">\r\n                <input type=\"checkbox\" checked.bind=\"reverseSort\">\r\n                <label>Reverse Sort</label>\r\n                </div>\r\n            </div>\r\n            <div class=\"column\">\r\n                <div class=\"ui toggle checkbox column\">\r\n                <input type=\"checkbox\" checked.bind=\"showProjects\">\r\n                <label>Show Projects</label>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"ui divider\"></div>\r\n        <div class=\"ui vertically divided grid phase-list\">\r\n            <div class=\"row header\">\r\n                <div class=\"four wide column\">Job</div>\r\n                <div class=\"twelve wide column\">\r\n                    <div class=\"ui equal width center aligned grid\">\r\n                        <div class=\"row\">\r\n                            <div class=\"column\" repeat.for=\"phase of phases | sort:'sortOrder'\">\r\n                                <i class=\"icon ${phase.cssClass}\"></i>\r\n                                ${phase.name}\r\n                            </div>\r\n                        </div>\r\n                    </div>                    \r\n                </div>\r\n            </div>\r\n            <table-row repeat.for=\"job of filteredItems\" job.bind=\"job\" phases.bind=\"phases\"></table-row>\r\n        </table>\r\n    </div>\r\n</template>"; });
 define('text!resources/views/job-phases/table-row.html', ['module'], function(module) { module.exports = "<template>    \r\n    <require from=\"./table-cell\" as=\"table-cell\"></require>\r\n    <div class=\"row\">\r\n        <div class=\"four wide column\">\r\n            <a class=\"b\" route-href=\"route:jobs.edit;params.bind:{id: job._id}\">\r\n                <strong>\r\n                    ${jobNumber}\r\n                </strong>                \r\n            </a>\r\n            :&nbsp;\r\n            ${job.customer.name}\r\n            <br>\r\n            <i class=\"icon small circular ${jobStatus.cssClass}\"></i>\r\n            <span>&nbsp;${jobStatus.name}</span>\r\n        </div>\r\n        <div class=\"twelve wide column\">\r\n            <div class=\"ui equal width center aligned grid\">\r\n                <div class=\"row\">\r\n                    <table-cell repeat.for=\"phase of phases | sort:'sortOrder'\" job.bind=\"job\" phase.bind=\"phase\"></table-cell>\r\n                </div>\r\n            </div>                    \r\n        </div>\r\n    </div>\r\n</template>"; });
@@ -1558,6 +1560,390 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+define('resources/views/jobs/table',["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "../../services/auth", "moment", "../../services/data/db", "../../models/job-type", "../../models/job-status", "../../services/data/job-service", "../../utilities/equals", "../../utilities/sort"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, auth_1, moment, db_1, job_type_1, job_status_1, job_service_1, equals_1, sort_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var JobTable = (function () {
+        function JobTable(auth, jobService, events, el) {
+            this.auth = auth;
+            this.jobService = jobService;
+            this.events = events;
+            this.el = el;
+            this.items = [];
+            this.filteredItems = [];
+            this.myJobs = false;
+            this.showOpen = true;
+            this.showClosed = false;
+            this.showCompleted = false;
+            this.reverseSort = false;
+            this.customerSort = false;
+            this.showProjects = true;
+            this.showServiceCalls = true;
+            this.filtersExpanded = false;
+            this.search = "";
+            this.showCompleted =
+                auth.isInRole(auth_1.Roles.OfficeAdmin) || auth.isInRole(auth_1.Roles.Administrator);
+            this.myJobs =
+                !auth.isInRole(auth_1.Roles.ViewAllJobs) &&
+                    !auth.isInRole(auth_1.Roles.EditAllJobs) &&
+                    !auth.isInRole(auth_1.Roles.OfficeAdmin) &&
+                    !auth.isInRole(auth_1.Roles.Administrator);
+        }
+        JobTable.prototype.attached = function () {
+            $(".ui.toggle.checkbox", this.el).checkbox({
+                onChange: this.filter.bind(this),
+            });
+            this.syncChangeSubscription = this.events.subscribe(db_1.Database.SyncChangeEvent, this.refresh.bind(this));
+            this.refresh();
+        };
+        JobTable.prototype.detached = function () {
+            this.syncChangeSubscription && this.syncChangeSubscription.dispose();
+        };
+        JobTable.prototype.refresh = function () {
+            var _this = this;
+            this.jobService.getAll().then(function (items) {
+                _this.items = items;
+                _this.filter();
+            });
+        };
+        JobTable.prototype.filter = function () {
+            var _this = this;
+            var me = this.auth.userInfo().name;
+            var search = function (i) {
+                return !_this.search ||
+                    equals_1.contains(i.customer.name, _this.search) ||
+                    equals_1.contains(i.name, _this.search) ||
+                    equals_1.contains(i.number, _this.search);
+            };
+            var mine = function (i) {
+                return !_this.myJobs ||
+                    (Array.isArray(i.foreman)
+                        ? i.foreman.indexOf(me) !== -1
+                        : equals_1.equals(i.foreman, me));
+            };
+            var open = function (i) {
+                return _this.showOpen &&
+                    (equals_1.equals(i.status, job_status_1.JobStatus.PENDING) ||
+                        equals_1.equals(i.status, job_status_1.JobStatus.IN_PROGRESS));
+            };
+            var completed = function (i) {
+                return _this.showCompleted && equals_1.equals(i.status, job_status_1.JobStatus.COMPLETE);
+            };
+            var closed = function (i) {
+                return _this.showClosed && equals_1.equals(i.status, job_status_1.JobStatus.CLOSED);
+            };
+            var projects = function (i) {
+                return _this.showProjects && equals_1.equals(i.job_type, job_type_1.JobType.PROJECT);
+            };
+            var serviceCalls = function (i) {
+                return _this.showServiceCalls && equals_1.equals(i.job_type, job_type_1.JobType.SERVICE_CALL);
+            };
+            var sortedItems = this.items.filter(function (i) {
+                return search(i) &&
+                    mine(i) &&
+                    (open(i) || closed(i) || completed(i)) &&
+                    (projects(i) || serviceCalls(i));
+            });
+            sortedItems.sort(function (a, b) {
+                var direction = _this.reverseSort ? "descending" : "", customerResult = _this.customerSort &&
+                    sort_1.sort(a.customer.name, b.customer.name, direction), numberWithPrefixSort = sort_1.sort(a.number, b.number, direction);
+                return customerResult || numberWithPrefixSort;
+            });
+            this.filteredItems = sortedItems;
+        };
+        JobTable.prototype.toggleFiltersExpanded = function () {
+            this.filtersExpanded = !this.filtersExpanded;
+        };
+        JobTable.prototype.jobNumberDisplay = function (i) {
+            var prefix = equals_1.equals(i.job_type, job_type_1.JobType.SERVICE_CALL) ? "S" : "P";
+            return prefix + "-" + i.number;
+        };
+        JobTable.prototype.startDateDisplay = function (i) {
+            if (!i.startDate)
+                return "Not Scheduled";
+            var m = moment(i.startDate);
+            return m.isValid() ? m.format("ddd MMM D, YYYY") : "Not Scheduled";
+        };
+        JobTable.prototype.endDateDisplay = function (i) {
+            if (!i.endDate)
+                return "";
+            var m = moment(i.endDate);
+            return m.isValid() ? m.format("ddd MMM D, YYYY") : "";
+        };
+        JobTable.prototype.foremanDisplay = function (i) {
+            if (Array.isArray(i.foreman))
+                return i.foreman.join(", ");
+            return i.foreman || "Unassigned";
+        };
+        JobTable.prototype.jobStatus = function (i) {
+            return job_status_1.JobStatus.OPTIONS.find(function (s) { return equals_1.equals(s.id, i.status); });
+        };
+        Object.defineProperty(JobTable.prototype, "canEditAllJobs", {
+            get: function () {
+                return (this.auth.isInRole(auth_1.Roles.EditAllJobs) ||
+                    this.auth.isInRole(auth_1.Roles.Administrator));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        JobTable = __decorate([
+            aurelia_framework_1.autoinject(),
+            __metadata("design:paramtypes", [auth_1.Authentication,
+                job_service_1.JobService,
+                aurelia_event_aggregator_1.EventAggregator,
+                Element])
+        ], JobTable);
+        return JobTable;
+    }());
+    exports.JobTable = JobTable;
+});
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+define('resources/views/jobs/table-item',["require", "exports", "aurelia-framework", "moment", "../../models/job-status", "../../models/job-type", "../../models/foreman", "../../services/data/job-service", "../../services/notifications", "../../services/auth", "../../services/data/users-service"], function (require, exports, aurelia_framework_1, moment, job_status_1, job_type_1, foreman_1, job_service_1, notifications_1, auth_1, users_service_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var ListItem = (function () {
+        function ListItem(jobService, auth, userService) {
+            var _this = this;
+            this.jobService = jobService;
+            this.auth = auth;
+            this.expanded = false;
+            this.jobStatuses = job_status_1.JobStatus.OPTIONS;
+            if (!this.auth.isInRole(auth_1.Roles.OfficeAdmin)) {
+                var close = this.jobStatuses.findIndex(function (status) { return status.id === job_status_1.JobStatus.CLOSED; });
+                if (close !== -1) {
+                    this.jobStatuses.splice(close, 1);
+                }
+            }
+            userService
+                .getAllInRole(auth_1.Roles.Foreman)
+                .then(function (foremen) { return (_this.foremen = foremen.map(function (f) { return f.name; })); });
+        }
+        ListItem.prototype.attached = function () {
+            $(".dropdown.status", this.el).dropdown({
+                onChange: this.onStatusChanged.bind(this),
+            });
+            $(".dropdown.foreman", this.el).dropdown({
+                onChange: this.onForemanChanged.bind(this),
+            });
+        };
+        ListItem.prototype.detached = function () {
+            $(".dropdown.status", this.el).dropdown("destroy");
+            $(".dropdown.foreman", this.el).dropdown("destroy");
+        };
+        ListItem.prototype.toggleExpanded = function () {
+            this.expanded = !this.expanded;
+        };
+        Object.defineProperty(ListItem.prototype, "startDateDisplay", {
+            get: function () {
+                var display = "Not Scheduled";
+                if (this.job.startDate) {
+                    display = moment(this.job.startDate).format("ddd, MMM Do");
+                }
+                return display;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "endDateDisplay", {
+            get: function () {
+                var display = "";
+                if (this.job.endDate) {
+                    display = moment(this.job.endDate).format("ddd, MMM Do");
+                }
+                return display;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "jobStatus", {
+            get: function () {
+                var _this = this;
+                return this.jobStatuses.find(function (s) { return s.id == _this.job.status; });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "foremanDisplay", {
+            get: function () {
+                return Array.isArray(this.job.foreman)
+                    ? this.job.foreman.join(", ") || "Unassigned"
+                    : this.job.foreman || "Unassigned";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "foremanColour", {
+            get: function () {
+                var foreman = Array.isArray(this.job.foreman)
+                    ? "white"
+                    : (this.job.foreman || "").toLowerCase(), bg = foreman_1.Foreman.BackgroundColours[foreman] || "white", color = bg === "white" ? "black" : "white", margin = "1px";
+                return { "background-color": bg, color: color, margin: margin };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "isPending", {
+            get: function () {
+                return this.job.status === "pending";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "isInProgress", {
+            get: function () {
+                return this.job.status === job_status_1.JobStatus.PENDING;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "isComplete", {
+            get: function () {
+                return this.job.status === job_status_1.JobStatus.COMPLETE;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "isClosed", {
+            get: function () {
+                return this.job.status === job_status_1.JobStatus.CLOSED;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "isProject", {
+            get: function () {
+                return this.job.job_type === job_type_1.JobType.PROJECT;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "isServiceCall", {
+            get: function () {
+                return this.job.job_type === job_type_1.JobType.SERVICE_CALL;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ListItem.prototype, "jobNumberDisplay", {
+            get: function () {
+                var prefix = this.job.job_type === job_type_1.JobType.SERVICE_CALL ? "S" : "P";
+                return prefix + "-" + this.job.number;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ListItem.prototype.onStatusChanged = function (value) {
+            this.job.status = value;
+            this.save("Status");
+        };
+        ListItem.prototype.onForemanChanged = function (value) {
+            this.job.foreman = value;
+            this.save("Foreman");
+        };
+        ListItem.prototype.save = function (field) {
+            var _this = this;
+            return this.jobService
+                .save(this.job)
+                .then(function (response) {
+                _this.job._rev = response.rev;
+                notifications_1.Notifications.success(field + " updated");
+            })
+                .catch(notifications_1.Notifications.error);
+        };
+        __decorate([
+            aurelia_framework_1.bindable,
+            __metadata("design:type", Object)
+        ], ListItem.prototype, "job", void 0);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.startDate"),
+            __metadata("design:type", String),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "startDateDisplay", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.endDate"),
+            __metadata("design:type", String),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "endDateDisplay", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.status"),
+            __metadata("design:type", job_status_1.JobStatus),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "jobStatus", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.foreman"),
+            __metadata("design:type", String),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "foremanDisplay", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.foreman"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "foremanColour", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.status"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "isPending", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.status"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "isInProgress", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.status"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "isComplete", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.status"),
+            __metadata("design:type", Boolean),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "isClosed", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.job_type"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "isProject", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.job_type"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "isServiceCall", null);
+        __decorate([
+            aurelia_framework_1.computedFrom("job.job_type", "job.number"),
+            __metadata("design:type", Object),
+            __metadata("design:paramtypes", [])
+        ], ListItem.prototype, "jobNumberDisplay", null);
+        ListItem = __decorate([
+            aurelia_framework_1.autoinject,
+            aurelia_framework_1.containerless,
+            __metadata("design:paramtypes", [job_service_1.JobService,
+                auth_1.Authentication,
+                users_service_1.UserService])
+        ], ListItem);
+        return ListItem;
+    }());
+    exports.ListItem = ListItem;
+});
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -1787,39 +2173,98 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('resources/views/jobs/new',["require", "exports", "aurelia-framework", "aurelia-router", "moment", "jquery", "../../services/data/job-service", "../../services/data/customer-service", "../../services/notifications", "../../services/utils", "../../models/job", "../../models/customer", "../../models/job-type", "../../models/job-status", "../../models/billing-type", "../../models/work-type", "semantic-ui-calendar"], function (require, exports, aurelia_framework_1, aurelia_router_1, moment, $, job_service_1, customer_service_1, notifications_1, utils_1, job_1, customer_1, job_type_1, job_status_1, billing_type_1, work_type_1) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+define('resources/views/jobs/new',["require", "exports", "aurelia-framework", "aurelia-router", "moment", "jquery", "../../services/data/job-service", "../../services/data/customer-service", "../../services/notifications", "../../services/utils", "../../models/job", "../../models/customer", "../../models/job-type", "../../models/job-status", "../../models/billing-type", "../../models/work-type", "../../services/data/sub-job-service", "../../utilities/sort", "semantic-ui-calendar"], function (require, exports, aurelia_framework_1, aurelia_router_1, moment, $, job_service_1, customer_service_1, notifications_1, utils_1, job_1, customer_1, job_type_1, job_status_1, billing_type_1, work_type_1, sub_job_service_1, sort_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var NewJob = (function () {
-        function NewJob(element, router, jobService, customerService) {
+        function NewJob(element, router, jobService, customerService, subJobService) {
             var _this = this;
             this.element = element;
             this.router = router;
             this.jobService = jobService;
             this.customerService = customerService;
+            this.subJobService = subJobService;
             this.jobTypes = job_type_1.JobType.OPTIONS;
             this.jobStatuses = job_status_1.JobStatus.OPTIONS;
             this.billingTypes = billing_type_1.BillingType.OPTIONS;
             this.workTypes = work_type_1.WorkType.OPTIONS;
             this.isFollowup = false;
+            this.subjobOptions = [];
             this.job = new job_1.JobDocument();
             customerService.getAll()
                 .then(function (customers) { return _this.customers = customers; })
                 .catch(notifications_1.Notifications.error);
         }
         NewJob.prototype.activate = function (params, routeConfig) {
-            var _this = this;
-            routeConfig.title = this.title;
-            if (utils_1.isString(params.type)) {
-                this.job.type = params.type;
-            }
-            if (params.from) {
-                this.jobService.getOne(params.from)
-                    .then(function (prev) {
-                    _this.isFollowup = true;
-                    _this.job.customer = prev.customer;
+            return __awaiter(this, void 0, void 0, function () {
+                var options;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            routeConfig.title = this.title;
+                            return [4, this.subJobService.getAll()];
+                        case 1:
+                            options = _a.sent();
+                            console.log(options);
+                            this.subjobOptions = options
+                                .sort(sort_1.sortBy("value"))
+                                .map(function (o) { return ({
+                                name: o.name,
+                                value: o.value,
+                                checked: false,
+                            }); });
+                            console.log(this.subjobOptions);
+                            if (utils_1.isString(params.type)) {
+                                this.job.type = params.type;
+                            }
+                            if (params.from) {
+                                this.jobService.getOne(params.from)
+                                    .then(function (prev) {
+                                    _this.isFollowup = true;
+                                    _this.job.customer = prev.customer;
+                                });
+                            }
+                            return [2];
+                    }
                 });
-            }
+            });
         };
         NewJob.prototype.attached = function () {
             var _this = this;
@@ -1934,7 +2379,11 @@ define('resources/views/jobs/new',["require", "exports", "aurelia-framework", "a
         };
         NewJob = __decorate([
             aurelia_framework_1.autoinject(),
-            __metadata("design:paramtypes", [Element, aurelia_router_1.Router, job_service_1.JobService, customer_service_1.CustomerService])
+            __metadata("design:paramtypes", [Element,
+                aurelia_router_1.Router,
+                job_service_1.JobService,
+                customer_service_1.CustomerService,
+                sub_job_service_1.SubJobOptionService])
         ], NewJob);
         return NewJob;
     }());
@@ -2739,121 +3188,176 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('resources/views/jobs/detail',["require", "exports", "aurelia-framework", "aurelia-router", "aurelia-dialog", "jquery", "moment", "./sub-jobs", "../controls/prompt", "../../services/data/job-service", "../../services/data/customer-service", "../../services/notifications", "../../models/job", "../../models/customer", "../../models/job-type", "../../models/job-status", "../../models/billing-type", "../../models/work-type", "../../services/utils", "../../utilities/equals", "semantic-ui-calendar"], function (require, exports, aurelia_framework_1, aurelia_router_1, aurelia_dialog_1, $, moment, sub_jobs_1, prompt_1, job_service_1, customer_service_1, notifications_1, job_1, customer_1, job_type_1, job_status_1, billing_type_1, work_type_1, utils_1, equals_1) {
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+define('resources/views/jobs/detail',["require", "exports", "aurelia-framework", "aurelia-router", "aurelia-dialog", "jquery", "moment", "./sub-jobs", "../controls/prompt", "../../services/data/job-service", "../../services/data/customer-service", "../../services/data/sub-job-service", "../../services/notifications", "../../models/job", "../../models/customer", "../../models/job-type", "../../models/job-status", "../../models/billing-type", "../../models/work-type", "../../services/utils", "../../utilities/sort", "../../utilities/guid", "semantic-ui-calendar"], function (require, exports, aurelia_framework_1, aurelia_router_1, aurelia_dialog_1, $, moment, sub_jobs_1, prompt_1, job_service_1, customer_service_1, sub_job_service_1, notifications_1, job_1, customer_1, job_type_1, job_status_1, billing_type_1, work_type_1, utils_1, sort_1, guid_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EditJob = (function () {
-        function EditJob(element, router, jobService, customerService, dialogService) {
+        function EditJob(element, router, jobService, customerService, dialogService, subJobService) {
             var _this = this;
             this.element = element;
             this.router = router;
             this.jobService = jobService;
             this.customerService = customerService;
             this.dialogService = dialogService;
+            this.subJobService = subJobService;
             this.jobTypes = job_type_1.JobType.OPTIONS;
             this.jobStatuses = job_status_1.JobStatus.OPTIONS;
             this.billingTypes = billing_type_1.BillingType.OPTIONS;
             this.workTypes = work_type_1.WorkType.OPTIONS;
             this.isFollowup = false;
-            this.canAddSubJobs = false;
+            this.subjobOptions = [];
+            this.closeOriginalJob = true;
+            this.subjobChecked = false;
             this.customerServicePromise = customerService
                 .getAll()
                 .then(function (customers) { return (_this.customers = customers); })
                 .catch(notifications_1.Notifications.error);
         }
         EditJob.prototype.activate = function (params) {
-            var _this = this;
-            this.customerServicePromise.then(function () {
-                var id = params.id, date = moment(params.date, "YYYY-MM-DD"), el = _this.element;
-                if (utils_1.isUndefined(id)) {
-                    _this.job = new job_1.JobDocument();
-                    if (utils_1.isString(params.type)) {
-                        _this.job.type = params.type;
+            return __awaiter(this, void 0, void 0, function () {
+                var options;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.customerServicePromise.then(function () {
+                                var id = params.id, date = moment(params.date, "YYYY-MM-DD"), el = _this.element;
+                                if (utils_1.isUndefined(id)) {
+                                    _this.job = new job_1.JobDocument();
+                                    if (utils_1.isString(params.type)) {
+                                        _this.job.type = params.type;
+                                    }
+                                    if (!utils_1.isUndefined(params.date) && date.isValid()) {
+                                        _this.job.startDate = date.toDate();
+                                        $(".calendar.start", _this.element).calendar("set date", _this.job.startDate);
+                                    }
+                                    if (params.from) {
+                                        _this.jobService.getOne(params.from).then(function (prev) {
+                                            _this.isFollowup = true;
+                                            _this.job.customer = prev.customer;
+                                        });
+                                    }
+                                }
+                                else {
+                                    _this.jobService
+                                        .getOne(id)
+                                        .then(function (job) {
+                                        _this.job = job;
+                                        if (utils_1.isDate(job.startDate)) {
+                                            $(".calendar.start", _this.element).calendar("set date", job.startDate);
+                                        }
+                                        if (utils_1.isDate(job.endDate)) {
+                                            $(".calendar.end", _this.element).calendar("set date", job.endDate);
+                                        }
+                                        if (job.customer) {
+                                            $(".customer", _this.element).dropdown("set selected", job.customer.name);
+                                            $(".customer", _this.element).dropdown("set value", job.customer._id);
+                                        }
+                                        if (job.status) {
+                                            $("#status", _this.element).dropdown("set selected", job.status);
+                                            $("#status", _this.element).dropdown("set value", job.status);
+                                        }
+                                        if (job.billing_type) {
+                                            $("#billingType", _this.element).dropdown("set selected", job.billing_type);
+                                            $("#billingType", _this.element).dropdown("set value", job.billing_type);
+                                        }
+                                        window.setTimeout(function () {
+                                            if (Array.isArray(job.additionalDates) &&
+                                                job.additionalDates.length) {
+                                                job.additionalDates.forEach(function (d, i) {
+                                                    var date = null;
+                                                    if (utils_1.isDate(d[0])) {
+                                                        date = d[0];
+                                                    }
+                                                    else if (utils_1.isString(d[0])) {
+                                                        date = moment(d[0]).toDate();
+                                                    }
+                                                    if (date) {
+                                                        $(".calendar.start-" + i, _this.element)
+                                                            .calendar({
+                                                            type: "date",
+                                                            onChange: function (d) {
+                                                                return (_this.job.additionalDates[i][0] = moment(d).toDate());
+                                                            },
+                                                        })
+                                                            .calendar("set date", date);
+                                                    }
+                                                    date = null;
+                                                    if (utils_1.isDate(d[1])) {
+                                                        date = d[1];
+                                                    }
+                                                    else if (utils_1.isString(d[1])) {
+                                                        date = moment(d[1]).toDate();
+                                                    }
+                                                    if (date) {
+                                                        $(".calendar.end-" + i, _this.element)
+                                                            .calendar({
+                                                            type: "date",
+                                                            onChange: function (d) {
+                                                                return (_this.job.additionalDates[i][1] = moment(d).toDate());
+                                                            },
+                                                        })
+                                                            .calendar("set date", date);
+                                                    }
+                                                });
+                                            }
+                                        }, 100);
+                                    })
+                                        .catch(function (err) {
+                                        notifications_1.Notifications.error(err);
+                                        _this.router.navigateToRoute("jobs.list");
+                                    });
+                                }
+                            });
+                            return [4, this.subJobService.getAll()];
+                        case 1:
+                            options = _a.sent();
+                            this.subjobOptions = options
+                                .sort(sort_1.sortBy("value"))
+                                .map(function (o) { return ({
+                                name: o.name,
+                                value: o.value,
+                                checked: false,
+                            }); });
+                            return [2];
                     }
-                    if (!utils_1.isUndefined(params.date) && date.isValid()) {
-                        _this.job.startDate = date.toDate();
-                        $(".calendar.start", _this.element).calendar("set date", _this.job.startDate);
-                    }
-                    if (params.from) {
-                        _this.jobService.getOne(params.from).then(function (prev) {
-                            _this.isFollowup = true;
-                            _this.job.customer = prev.customer;
-                        });
-                    }
-                }
-                else {
-                    _this.jobService
-                        .getOne(id)
-                        .then(function (job) {
-                        _this.job = job;
-                        if (equals_1.equals(job.job_type, job_type_1.JobType.PROJECT)) {
-                            _this.canAddSubJobs = true;
-                        }
-                        if (utils_1.isDate(job.startDate)) {
-                            $(".calendar.start", _this.element).calendar("set date", job.startDate);
-                        }
-                        if (utils_1.isDate(job.endDate)) {
-                            $(".calendar.end", _this.element).calendar("set date", job.endDate);
-                        }
-                        if (job.customer) {
-                            $(".customer", _this.element).dropdown("set selected", job.customer.name);
-                            $(".customer", _this.element).dropdown("set value", job.customer._id);
-                        }
-                        if (job.status) {
-                            $("#status", _this.element).dropdown("set selected", job.status);
-                            $("#status", _this.element).dropdown("set value", job.status);
-                        }
-                        if (job.billing_type) {
-                            $("#billingType", _this.element).dropdown("set selected", job.billing_type);
-                            $("#billingType", _this.element).dropdown("set value", job.billing_type);
-                        }
-                        window.setTimeout(function () {
-                            if (Array.isArray(job.additionalDates) &&
-                                job.additionalDates.length) {
-                                job.additionalDates.forEach(function (d, i) {
-                                    var date = null;
-                                    if (utils_1.isDate(d[0])) {
-                                        date = d[0];
-                                    }
-                                    else if (utils_1.isString(d[0])) {
-                                        date = moment(d[0]).toDate();
-                                    }
-                                    if (date) {
-                                        $(".calendar.start-" + i, _this.element)
-                                            .calendar({
-                                            type: "date",
-                                            onChange: function (d) {
-                                                return (_this.job.additionalDates[i][0] = moment(d).toDate());
-                                            },
-                                        })
-                                            .calendar("set date", date);
-                                    }
-                                    date = null;
-                                    if (utils_1.isDate(d[1])) {
-                                        date = d[1];
-                                    }
-                                    else if (utils_1.isString(d[1])) {
-                                        date = moment(d[1]).toDate();
-                                    }
-                                    if (date) {
-                                        $(".calendar.end-" + i, _this.element)
-                                            .calendar({
-                                            type: "date",
-                                            onChange: function (d) {
-                                                return (_this.job.additionalDates[i][1] = moment(d).toDate());
-                                            },
-                                        })
-                                            .calendar("set date", date);
-                                    }
-                                });
-                            }
-                        }, 100);
-                    })
-                        .catch(function (err) {
-                        notifications_1.Notifications.error(err);
-                        _this.router.navigateToRoute("jobs.list");
-                    });
-                }
+                });
             });
         };
         EditJob.prototype.attached = function () {
@@ -2883,6 +3387,7 @@ define('resources/views/jobs/detail',["require", "exports", "aurelia-framework",
                 type: "date",
                 onChange: function (date) { return (_this.job.endDate = moment(date).toDate()); },
             });
+            $(".ui.checkbox", this.element).checkbox();
             var $buttonBar = $(".button-bar", this.element);
             $buttonBar.visibility({
                 once: false,
@@ -2902,6 +3407,7 @@ define('resources/views/jobs/detail',["require", "exports", "aurelia-framework",
             $(".calendar", this.element).calendar("destroy");
             $(".button-bar", this.element).visibility("destroy");
             $(".dropdown.basic.button", this.element).dropdown("destroy");
+            $(".ui.checkbox", this.element).checkbox("destroy");
         };
         Object.defineProperty(EditJob.prototype, "customer_id", {
             get: function () {
@@ -2924,6 +3430,13 @@ define('resources/views/jobs/detail',["require", "exports", "aurelia-framework",
                 return ((this.job.job_type === job_type_1.JobType.PROJECT ? "P" : "S") +
                     "-" +
                     this.job.number);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EditJob.prototype, "subjobOptionsChecked", {
+            get: function () {
+                return this.subjobOptions.some(function (o) { return o.checked; });
             },
             enumerable: true,
             configurable: true
@@ -2959,6 +3472,13 @@ define('resources/views/jobs/detail',["require", "exports", "aurelia-framework",
             console.log(length);
             $(".calendar.start-" + index + ",.calendar.end-" + index, this.element).calendar("destroy");
             this.job.additionalDates.splice(index, 1);
+        };
+        EditJob.prototype.addOption = function () {
+            var _this = this;
+            this.subjobOptions.push({ value: "", name: "", checked: true });
+            window.setTimeout(function () {
+                $(".ui.checkbox", _this.element).checkbox("destroy").checkbox();
+            }, 100);
         };
         EditJob.prototype.onSaveClick = function () {
             var _this = this;
@@ -3009,14 +3529,60 @@ define('resources/views/jobs/detail',["require", "exports", "aurelia-framework",
                     .catch(notifications_1.Notifications.error);
             });
         };
+        EditJob.prototype.validateOption = function (option) {
+            return true;
+        };
         EditJob.prototype.saveJob = function () {
             var _this = this;
+            if (this.closeOriginalJob && this.subjobOptions.filter(function (o) { return o.checked && o.value; }).length) {
+                this.job.status = job_status_1.JobStatus.CLOSED;
+            }
             return this.jobService
                 .save(this.job.toJSON())
-                .then(function () {
-                notifications_1.Notifications.success("Job Saved");
-                _this.router.navigateToRoute("jobs.list");
-            })
+                .then(function (result) { return __awaiter(_this, void 0, void 0, function () {
+                var newJob, selected, saves, e_1;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, this.jobService.getOne(result.id)];
+                        case 1:
+                            newJob = _a.sent();
+                            selected = this.subjobOptions.filter(function (o) { return o.checked && o.value; });
+                            if (!selected.length) return [3, 5];
+                            console.log("Saving sub-jobs:", selected);
+                            saves = selected.map(function (o) {
+                                var document = new job_1.JobDocument(newJob);
+                                var json = document.toJSON();
+                                json._id = guid_1.guid();
+                                delete json._rev;
+                                json.number = "" + newJob.number + (o.value || "").toString().toUpperCase();
+                                json.status = job_status_1.JobStatus.PENDING;
+                                json.name = newJob.name + " - " + o.name;
+                                return _this.jobService
+                                    .save(json)
+                                    .catch(function (err) {
+                                    console.error("Failed to save sub-job", json.number, err);
+                                    notifications_1.Notifications.error(err);
+                                    throw err;
+                                });
+                            });
+                            _a.label = 2;
+                        case 2:
+                            _a.trys.push([2, 4, , 5]);
+                            return [4, Promise.all(saves)];
+                        case 3:
+                            _a.sent();
+                            return [3, 5];
+                        case 4:
+                            e_1 = _a.sent();
+                            return [3, 5];
+                        case 5:
+                            notifications_1.Notifications.success("Job Saved");
+                            this.router.navigateToRoute("jobs.list");
+                            return [2];
+                    }
+                });
+            }); })
                 .catch(function (err) {
                 notifications_1.Notifications.error(err);
             });
@@ -3030,7 +3596,8 @@ define('resources/views/jobs/detail',["require", "exports", "aurelia-framework",
                 aurelia_router_1.Router,
                 job_service_1.JobService,
                 customer_service_1.CustomerService,
-                aurelia_dialog_1.DialogService])
+                aurelia_dialog_1.DialogService,
+                sub_job_service_1.SubJobOptionService])
         ], EditJob);
         return EditJob;
     }());
@@ -4515,10 +5082,21 @@ define('resources/views/app',["require", "exports", "aurelia-framework", "../ser
                     route: ["", "jobs"],
                     name: "jobs.list",
                     moduleId: "resources/views/jobs/list",
-                    title: "Jobs List",
+                    title: "Jobs",
                     nav: true,
                     auth: true,
                     settings: { icon: "browser", mobileTitle: "" },
+                },
+            ]);
+            config.map([
+                {
+                    route: "jobs/table",
+                    name: "jobs.table",
+                    moduleId: "resources/views/jobs/table",
+                    title: "Job List",
+                    nav: true,
+                    auth: true,
+                    settings: { icon: "table", mobileTitle: "" },
                 },
             ]);
             if (this.auth.isInRole(auth_1.Roles.Administrator) ||
@@ -7610,11 +8188,11 @@ define('environment',["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = {
-        debug: true,
-        testing: true
+        debug: false,
+        testing: false
     };
 });
 
-define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "3.8.0",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.4.0",\n    "aurelia-dialog": "^2.0.0",\n    "aurelia-fetch-client": "^1.8.2",\n    "aurelia-pal": "^1.8.2",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.5",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.4.1",\n    "moment": "^2.24.0",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^8.0.1",\n    "pouchdb-find": "^8.0.1",\n    "requirejs": "^2.3.6",\n    "semantic-ui-calendar": "^0.0.8",\n    "semantic-ui-css": "^2.5.0",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^3.0.0"\n  },\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/jquery": "^3.3.31",\n    "@types/node": "^12.7.5",\n    "@types/numeral": "0.0.26",\n    "@types/pouchdb-core": "^7.0.11",\n    "@types/pouchdb-find": "^7.3.0",\n    "@types/toastr": "^2.1.37",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "^3.6.3",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
+define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "4.0.0",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.4.0",\n    "aurelia-dialog": "^2.0.0",\n    "aurelia-fetch-client": "^1.8.2",\n    "aurelia-pal": "^1.8.2",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.5",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.4.1",\n    "moment": "^2.24.0",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^8.0.1",\n    "pouchdb-find": "^8.0.1",\n    "requirejs": "^2.3.6",\n    "semantic-ui-calendar": "^0.0.8",\n    "semantic-ui-css": "^2.5.0",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^3.0.0"\n  },\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/jquery": "^3.3.31",\n    "@types/node": "^12.7.5",\n    "@types/numeral": "0.0.26",\n    "@types/pouchdb-core": "^7.0.11",\n    "@types/pouchdb-find": "^7.3.0",\n    "@types/toastr": "^2.1.37",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "^3.6.3",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
 
 //# sourceMappingURL=app-bundle.js.map
