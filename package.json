@@ -1,7 +1,7 @@
 {
   "name": "jobs-web",
   "description": "Langendoen Mechanical Job Management Application.",
-  "version": "4.2.1",
+  "version": "5.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Resounding/Jobs-Web"
