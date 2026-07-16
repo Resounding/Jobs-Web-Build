@@ -7355,7 +7355,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define('resources/services/data/db',["require", "exports", "aurelia-event-aggregator", "aurelia-framework", "../../models/job", "../../models/job-phase", "../config", "../log", "../auth", "../notifications", "../../services/utils", "../../models/sub-job-option"], function (require, exports, aurelia_event_aggregator_1, aurelia_framework_1, job_1, job_phase_1, config_1, log_1, auth_1, notifications_1, utils_1, sub_job_option_1) {
+define('resources/services/data/db',["require", "exports", "aurelia-event-aggregator", "aurelia-framework", "../../models/job", "../../models/job-phase", "../../models/quote", "../config", "../log", "../auth", "../notifications", "../../services/utils", "../../models/sub-job-option"], function (require, exports, aurelia_event_aggregator_1, aurelia_framework_1, job_1, job_phase_1, quote_1, config_1, log_1, auth_1, notifications_1, utils_1, sub_job_option_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var localDB = null;
@@ -7471,7 +7471,12 @@ define('resources/services/data/db',["require", "exports", "aurelia-event-aggreg
                                     localDB
                                         .find({
                                         selector: {
-                                            type: job_1.JobDocument.DOCUMENT_TYPE,
+                                            type: {
+                                                $in: [
+                                                    job_1.JobDocument.DOCUMENT_TYPE,
+                                                    quote_1.QuoteDocument.DOCUMENT_TYPE,
+                                                ],
+                                            },
                                             deleted: { $ne: true },
                                         },
                                     })
@@ -7493,10 +7498,12 @@ define('resources/services/data/db',["require", "exports", "aurelia-event-aggreg
                                                                 case 0: return [4, this_1.nextJobNumber()];
                                                                 case 1:
                                                                     newNumber = _a.sent();
-                                                                    alert("Conflict detected: document " + conflict._id + " (job #" + conflict.number + ") has the same number as another job.\n                          Updating to " + newNumber + ". Please let Cliffe know.");
+                                                                    alert("Conflict detected: document " + conflict._id + " (#" + conflict.number + ") has the same number as another job or quote.\n                          Updating to " + newNumber + ". Please let Cliffe know.");
                                                                     conflict.number = newNumber;
                                                                     localDB.post(conflict).then(function () {
-                                                                        _this.events.publish(Database_1.DocumentUpdatedEvent, new job_1.JobDocument(conflict));
+                                                                        _this.events.publish(Database_1.DocumentUpdatedEvent, conflict.type === quote_1.QuoteDocument.DOCUMENT_TYPE
+                                                                            ? new quote_1.QuoteDocument(conflict)
+                                                                            : new job_1.JobDocument(conflict));
                                                                     });
                                                                     return [2];
                                                             }
@@ -7560,7 +7567,11 @@ define('resources/services/data/db',["require", "exports", "aurelia-event-aggreg
             return new Promise(function (resolve, reject) {
                 localDB
                     .find({
-                    selector: { type: job_1.JobDocument.DOCUMENT_TYPE },
+                    selector: {
+                        type: {
+                            $in: [job_1.JobDocument.DOCUMENT_TYPE, quote_1.QuoteDocument.DOCUMENT_TYPE],
+                        },
+                    },
                     fields: ["number"],
                 })
                     .then(function (rows) {
@@ -8507,6 +8518,6 @@ define('environment',["require", "exports"], function (require, exports) {
     };
 });
 
-define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "5.2.0",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.4.0",\n    "aurelia-dialog": "^2.0.0",\n    "aurelia-fetch-client": "^1.8.2",\n    "aurelia-pal": "^1.8.2",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.5",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.4.1",\n    "moment": "^2.24.0",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^8.0.1",\n    "pouchdb-find": "^8.0.1",\n    "requirejs": "^2.3.6",\n    "semantic-ui-calendar": "^0.0.8",\n    "semantic-ui-css": "^2.5.0",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^3.0.0"\n  },\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/jquery": "^3.3.31",\n    "@types/node": "^12.7.5",\n    "@types/numeral": "0.0.26",\n    "@types/pouchdb-core": "^7.0.11",\n    "@types/pouchdb-find": "^7.3.0",\n    "@types/toastr": "^2.1.37",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "^3.6.3",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
+define('text!resources/../../package.json',[],function () { return '{\n  "name": "jobs-web",\n  "description": "Langendoen Mechanical Job Management Application.",\n  "version": "5.2.1",\n  "repository": {\n    "type": "git",\n    "url": "https://github.com/Resounding/Jobs-Web"\n  },\n  "publisher": "Resounding Software",\n  "license": "MIT",\n  "dependencies": {\n    "aurelia-animator-css": "^1.0.4",\n    "aurelia-bootstrapper": "^2.4.0",\n    "aurelia-dialog": "^2.0.0",\n    "aurelia-fetch-client": "^1.8.2",\n    "aurelia-pal": "^1.8.2",\n    "aurelia-templating": "^1.8.2",\n    "bluebird": "^3.5.5",\n    "fullcalendar": "^3.2.0",\n    "jquery": "^3.4.1",\n    "moment": "^2.24.0",\n    "numeral": "^2.0.6",\n    "papaparse": "^4.1.2",\n    "pouchdb": "^8.0.1",\n    "pouchdb-find": "^8.0.1",\n    "requirejs": "^2.3.6",\n    "semantic-ui-calendar": "^0.0.8",\n    "semantic-ui-css": "^2.5.0",\n    "sortablejs": "^1.7.0",\n    "text": "github:requirejs/text#latest",\n    "toastr": "^2.1.4",\n    "whatwg-fetch": "^3.0.0"\n  },\n  "devDependencies": {\n    "@types/bluebird": "^3.5.18",\n    "@types/fullcalendar": "^3.5.1",\n    "@types/jquery": "^3.3.31",\n    "@types/node": "^12.7.5",\n    "@types/numeral": "0.0.26",\n    "@types/pouchdb-core": "^7.0.11",\n    "@types/pouchdb-find": "^7.3.0",\n    "@types/toastr": "^2.1.37",\n    "aurelia-cli": "^0.35.1",\n    "aurelia-testing": "^1.0.0",\n    "aurelia-tools": "^2.0.0",\n    "browser-sync": "^2.13.0",\n    "connect-history-api-fallback": "^1.2.0",\n    "debounce": "^1.1.0",\n    "del": "^2.2.1",\n    "event-stream": "^3.3.3",\n    "gulp": "github:gulpjs/gulp#4.0",\n    "gulp-changed-in-place": "^2.0.3",\n    "gulp-less": "^3.1.0",\n    "gulp-minify-html": "^1.0.6",\n    "gulp-notify": "^2.2.0",\n    "gulp-plumber": "^1.1.0",\n    "gulp-rename": "^1.2.2",\n    "gulp-rev": "^7.1.0",\n    "gulp-rev-replace": "^0.4.3",\n    "gulp-sourcemaps": "^2.0.0-alpha",\n    "gulp-tslint": "^5.0.0",\n    "gulp-typescript": "^3.2.3",\n    "gulp-uglify": "^2.0.0",\n    "gulp-usemin": "^0.3.23",\n    "gulp-watch": "^4.3.11",\n    "minimatch": "^3.0.2",\n    "through2": "^2.0.1",\n    "tslint": "^3.11.0",\n    "typescript": "^3.6.3",\n    "uglify-js": "^2.6.3",\n    "vinyl-fs": "^2.4.3",\n    "vinyl-paths": "^2.1.0"\n  }\n}\n';});
 
 //# sourceMappingURL=app-bundle.js.map
